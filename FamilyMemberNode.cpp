@@ -3,25 +3,33 @@
 //
 
 #include "FamilyMemberNode.h"
+Person::Person(int id, string name, Date birth, bool marriage, string address, bool alive, Date death) {
+  id = id;
+  name = name;
+  birth = birth;
+  marriage = marriage;
+  address = address;
+  alive = alive;
+  death = death;
+}
 Date::Date(int y, int m, int d) {
   year = y;
   month = m;
   day = d;
 }
 
-Person::Person(string name, Date birth, bool marriage) {
-  name = name;
-  birth = birth;
-  marriage = marriage;
-  alive = true;
-}
 FamilyMemberNode::FamilyMemberNode() {
   firstChild = nullptr;
   nextSibling = nullptr;
 }
-FamilyMemberNode::FamilyMemberNode(Person person, FamilyMemberNode *fChild, FamilyMemberNode *nSibling) {
-  person = person;
+FamilyMemberNode::FamilyMemberNode(Person person1, FamilyMemberNode *fChild, FamilyMemberNode *nSibling) {
+  person = person1;
   firstChild = fChild;
   nextSibling = nSibling;
+}
+FamilyMemberNode::FamilyMemberNode(Person person1) {
+  person = person1;
+  firstChild = nullptr;
+  nextSibling = nullptr;
 }
 

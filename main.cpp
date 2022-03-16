@@ -1,10 +1,9 @@
-#include <iostream>
 #include "FamilyTree.h"
 int main() {
   int n;
   string name1, name2;
   FamilyTree tree;
-  tree.importFromFile();
+  tree.importFromFile("person.txt", "case01.txt");
   int item;
   while (true) {
     cout << "1. 显示家谱" << endl;

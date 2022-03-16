@@ -2,6 +2,7 @@
 // Created by Rcforest on 2022/3/16.
 //
 #include <string>
+#include <iostream>
 using namespace std;
 #ifndef FAMILY_TREE__FAMILYMEMBERNODE_H_
 #define FAMILY_TREE__FAMILYMEMBERNODE_H_
@@ -15,6 +16,7 @@ struct Date {
 };
 
 struct Person {
+  int id;
   string name;
   Date birth;
   bool marriage;
@@ -22,17 +24,18 @@ struct Person {
   bool alive;
   Date death;
   Person()=default;
-  Person(string name, Date birth, bool marriage);
+  Person(int id, string name, Date birth, bool marriage, string address, bool alive=true, Date death=Date(-1, -1, -1));
 };
 
 class FamilyMemberNode {
  protected:
   Person person;
-  FamilyMemberNode *firstChild;
-  FamilyMemberNode *nextSibling;
  public:
   explicit FamilyMemberNode();
   FamilyMemberNode(Person person, FamilyMemberNode *fChild, FamilyMemberNode *nSibling);
+  FamilyMemberNode(Person person);
+  FamilyMemberNode *firstChild;
+  FamilyMemberNode *nextSibling;
 };
 
 #endif //FAMILY_TREE__FAMILYMEMBERNODE_H_
