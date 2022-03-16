@@ -36,6 +36,7 @@ class FamilyMemberNode {
   FamilyMemberNode(Person person);
   FamilyMemberNode *firstChild;
   FamilyMemberNode *nextSibling;
+  int id();
 };
 
 #endif //FAMILY_TREE__FAMILYMEMBERNODE_H_

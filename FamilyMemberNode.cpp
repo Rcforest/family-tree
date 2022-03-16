@@ -32,4 +32,7 @@ FamilyMemberNode::FamilyMemberNode(Person person1) {
   firstChild = nullptr;
   nextSibling = nullptr;
 }
+int FamilyMemberNode::id() {
+  return person.id;
+}
 
