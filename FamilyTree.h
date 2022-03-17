@@ -16,7 +16,7 @@ class FamilyTree {
   FamilyMemberNode *createTree(const vector<int> &persons_index, vector<int> parents, int root_);
   FamilyMemberNode *parent(FamilyMemberNode *root_, const FamilyMemberNode *child) const;
   FamilyMemberNode *node(int id, FamilyMemberNode *root_);
-  int parentIndex(FamilyMemberNode *root_, const FamilyMemberNode *child) const;
+  int parentIndex(const FamilyMemberNode *child) const;
   void getPersonsFromFile(const string &filename);
   void getTreeFromFile(const string &filename);
   void exportToPersonFile(const string &filename);
