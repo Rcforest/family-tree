@@ -14,10 +14,15 @@ class FamilyTree {
   int memberCount;
   FamilyMemberNode memberNode(string name); //根据名字确定节点
   FamilyMemberNode *createTree(const vector<int> &persons_index, vector<int> parents, int root_);
+  FamilyMemberNode *parent(FamilyMemberNode *root_, const FamilyMemberNode *child) const;
+  FamilyMemberNode *node(int id, FamilyMemberNode *root_);
+  int parentIndex(FamilyMemberNode *root_, const FamilyMemberNode *child) const;
   void getPersonsFromFile(const string &filename);
   void getTreeFromFile(const string &filename);
   void exportToPersonFile(const string &filename);
   void exportToCaseFile(const string &filename);
+  void exportPersonIndex(ofstream file);
+  void exportParentIndex(ofstream &file);
   string getName(FamilyMemberNode *r);
   void displayWithConcaveShape(FamilyMemberNode *root_, int level);
  public:
@@ -30,7 +35,7 @@ class FamilyTree {
   void remove(string name);
   void update(string name);
   void importFromFile(string personFile, string caseFile);
-  void exportToFile(string personFile, string caseFile);
+  void exportToFile(const string& personFile, const string& caseFile);
 };
 
 vector<string> split(char *phrase, string delimiter);
