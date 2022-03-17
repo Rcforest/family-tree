@@ -12,7 +12,7 @@ class FamilyTree {
   FamilyMemberNode *root;
   Person persons[MAX];
   int memberCount;
-  FamilyMemberNode memberNode(string name); //根据名字确定节点
+  FamilyMemberNode * memberNode(string name); //根据名字确定节点
   FamilyMemberNode *createTree(const vector<int> &persons_index, vector<int> parents, int root_);
   FamilyMemberNode *parent(FamilyMemberNode *root_, const FamilyMemberNode *child) const;
   FamilyMemberNode *node(int id, FamilyMemberNode *root_);
