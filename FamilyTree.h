@@ -16,6 +16,8 @@ class FamilyTree {
   FamilyMemberNode *createTree(const vector<int> &persons_index, vector<int> parents, int root_);
   void getPersonsFromFile(const string &filename);
   void getTreeFromFile(const string &filename);
+  void exportToPersonFile(const string &filename);
+  void exportToCaseFile(const string &filename);
   string getName(FamilyMemberNode *r);
   void displayWithConcaveShape(FamilyMemberNode *root_, int level);
  public:
@@ -28,7 +30,7 @@ class FamilyTree {
   void remove(string name);
   void update(string name);
   void importFromFile(string personFile, string caseFile);
-  void exportToFile();
+  void exportToFile(string personFile, string caseFile);
 };
 
 vector<string> split(char *phrase, string delimiter);
