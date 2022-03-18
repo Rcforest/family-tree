@@ -51,4 +51,6 @@ class FamilyTree {
 	/**************/
 };
 
+vector<string> split(char *phrase, string delimiter);
+
 #endif //FAMILY_TREE__FAMILYTREE_H_

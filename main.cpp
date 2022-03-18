@@ -1,10 +1,9 @@
-#include <iostream>
 #include "FamilyTree.h"
 int main() {
   int n;
   string name1, name2;
   FamilyTree tree;
-  tree.importFromFile();
+  tree.importFromFile("test/person.txt", "test/case01.txt");
   int item;
   while (true) {
     cout << "1. 显示家谱" << endl;
@@ -53,7 +52,7 @@ int main() {
         tree.update(name1);
         break;
       case 0:
-        tree.exportToFile();
+        tree.exportToFile("test/person_out.txt", "test/case01_out.txt");
         exit(0);
       default:
         break;
