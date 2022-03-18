@@ -62,17 +62,29 @@ void FamilyTree::getTreeFromFile(const string &filename) {
     return;
   }
   vector<int> parents;
+  vector<int> repeatedIndex;
   string line;
   std::getline(infile, line);
   vector<string> list = split(line, ", ");
-  for (int i = 0; i < memberCount; ++i) {
-    persons_id[i] = stoi(list[i]);
+  int n = memberCount, count = 0;
+  for (int i = 0; i < n; ++i) {
+    if (persons[stoi(list[i])].recorded) {
+      memberCount--;
+      repeatedIndex.push_back(i);
+      continue;
+    }
+    persons_id[count] = stoi(list[i]);
+    persons[stoi(list[i])].recorded = true;
+    count++;
   }
   std::getline(infile, line);
   list = split(line, ", ");
-  parents.reserve(list.size());
-  for (const string &i: list) {
-    parents.push_back(stoi(i));
+  for (int i = 0; i < memberCount; ++i) {
+    if (std::find(repeatedIndex.begin(), repeatedIndex.end(), i) != repeatedIndex.end()) {
+      cout << i << endl;
+      continue;
+    }
+    parents.push_back(stoi(list[i]));
   }
   root = createTree(parents, 0);
 }
@@ -228,7 +240,7 @@ void FamilyTree::exportParentIndex(ofstream &file) {
     int parent_index = parentIndex(presentNode);
     file << parent_index;
     if (i == memberCount - 1) file << endl;
-    else file << ", " ;
+    else file << ", ";
   }
 }
 

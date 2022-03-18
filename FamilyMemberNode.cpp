@@ -11,6 +11,12 @@ Person::Person(int id, string name, Date birth, bool marriage, string address, b
   address = address;
   alive = alive;
   death = death;
+  recorded = false;
+}
+Person::Person() {
+  alive = true;
+  death = Date(-1, -1, -1);
+  recorded = false;
 }
 Date::Date(int y, int m, int d) {
   year = y;

@@ -23,7 +23,8 @@ struct Person {
   string address;
   bool alive;
   Date death;
-  Person()=default;
+  bool recorded;
+  Person();
   Person(int id, string name, Date birth, bool marriage, string address, bool alive=true, Date death=Date(-1, -1, -1));
 };
 
