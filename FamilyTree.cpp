@@ -61,14 +61,12 @@ void FamilyTree::getTreeFromFile(const string &filename) {
   if (!infile.is_open()) {
     return;
   }
-  vector<int> person_index;
   vector<int> parents;
   string line;
   std::getline(infile, line);
   vector<string> list = split(line, ", ");
-  person_index.reserve(list.size());
-  for (const string &i: list) {
-    person_index.push_back(stoi(i));
+  for (int i = 0; i < memberCount; ++i) {
+    persons_id[i] = stoi(list[i]);
   }
   std::getline(infile, line);
   list = split(line, ", ");
@@ -76,25 +74,19 @@ void FamilyTree::getTreeFromFile(const string &filename) {
   for (const string &i: list) {
     parents.push_back(stoi(i));
   }
-  root = createTree(person_index, parents, 0);
+  root = createTree(parents, 0);
 }
 void FamilyTree::importFromFile(string personFile, string caseFile) {
   getPersonsFromFile(personFile);
   getTreeFromFile(caseFile);
 }
-FamilyMemberNode *FamilyTree::createTree(const vector<int> &persons_index, vector<int> parents, int root_) {
-  int index = 0;
-  for (int i = 0; i < memberCount; ++i) {
-    if (persons_index[i] == root_) {
-      index = i;
-      break;
-    }
-  }
+FamilyMemberNode *FamilyTree::createTree(vector<int> parents, int root_) {
+  int index = persons_id[root_] - 1;
   FamilyMemberNode *r = new FamilyMemberNode(persons[index]);
   FamilyMemberNode *subTreeRoot, *cur;
   for (int i = 0; i < memberCount; ++i) {
     if (parents[i] == root_) {
-      subTreeRoot = createTree(persons_index, parents, i);
+      subTreeRoot = createTree(parents, i);
       if (r->firstChild == nullptr) {
         r->firstChild = subTreeRoot;
         cur = subTreeRoot;
@@ -240,6 +232,5 @@ void FamilyTree::exportParentIndex(ofstream &file) {
     FamilyMemberNode *presentNode = node(i + 1, root);
     file << parentIndex(presentNode) << ", ";
   }
-  file << parentIndex(node(memberCount, root)) << "\n";
 }
 
