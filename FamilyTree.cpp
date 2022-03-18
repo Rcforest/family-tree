@@ -125,7 +125,11 @@ int FamilyTree::parentIndex(const FamilyMemberNode *child) const {
   if (child == root) {
     return -1;
   }
-  return parent(root, child)->id() - 1;
+  int id = parent(root, child)->id();
+  for (int i = 0; i < memberCount; ++i) {
+    if (persons_id[i] == id) return i;
+  }
+  return -1;
 }
 string FamilyTree::getName(FamilyMemberNode *r) {
   for (const Person &i: persons) {
@@ -222,13 +226,7 @@ void FamilyTree::exportParentIndex(ofstream &file) {
   for (int i = 0; i < memberCount; ++i) {
     FamilyMemberNode *presentNode = node(persons_id[i], root);
     int parent_index = parentIndex(presentNode);
-    if (parent_index == -1) {
-      file << parent_index;
-    } else {
-      for (int j = 0; j < memberCount; ++j) {
-        if (parent_index + 1 == persons_id[j]) file << j;
-      }
-    }
+    file << parent_index;
     if (i == memberCount - 1) file << endl;
     else file << ", " ;
   }
