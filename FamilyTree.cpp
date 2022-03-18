@@ -212,25 +212,25 @@ void FamilyTree::exportToCaseFile(const string &filename) {
   caseOut.close();
 }
 void FamilyTree::exportPersonIndex(ofstream &file) {
-  queue<FamilyMemberNode *> q;
-  int count = 0;
-  if (root == nullptr) return;
-  q.push(root);
-  while (!q.empty()) {
-    FamilyMemberNode *p = q.front();
-    count++;
-    if (count == memberCount) file << p->id() - 1 << endl;
-    else file << p->id() - 1 << ", ";
-    q.pop();
-    for (p = p->firstChild; p != nullptr; p = p->nextSibling) {
-      q.push(p);
-    }
+  for (int i = 0; i < memberCount; ++i) {
+    file << persons_id[i];
+    if (i == memberCount - 1) file << endl;
+    else file << ", ";
   }
 }
 void FamilyTree::exportParentIndex(ofstream &file) {
-  for (int i = 0; i < memberCount - 1; ++i) {
-    FamilyMemberNode *presentNode = node(i + 1, root);
-    file << parentIndex(presentNode) << ", ";
+  for (int i = 0; i < memberCount; ++i) {
+    FamilyMemberNode *presentNode = node(persons_id[i], root);
+    int parent_index = parentIndex(presentNode);
+    if (parent_index == -1) {
+      file << parent_index;
+    } else {
+      for (int j = 0; j < memberCount; ++j) {
+        if (parent_index + 1 == persons_id[j]) file << j;
+      }
+    }
+    if (i == memberCount - 1) file << endl;
+    else file << ", " ;
   }
 }
 
