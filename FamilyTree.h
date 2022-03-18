@@ -1,10 +1,14 @@
 //
 // Created by Rcforest on 2022/3/16.
 //
+#include <vector>
+#include <queue>
+#include <fstream>
 #include "FamilyMemberNode.h"
+#include "FamilyMemberNode.cpp"
 #ifndef FAMILY_TREE__FAMILYTREE_H_
 #define FAMILY_TREE__FAMILYTREE_H_
-
+#define MAX 100
 enum Status
 {
 	SUCCESS, FAILED, ERROR
@@ -14,9 +18,24 @@ class FamilyTree {
  protected:
 
 	FamilyMemberNode *root;
+	Person persons[MAX];
+	int persons_id[MAX];
+	int memberCount;
 	//assitant func
 
-
+	/* editor hhl*/
+	FamilyMemberNode* createTree(vector<int> parents, int root_);
+	FamilyMemberNode* parent(FamilyMemberNode* root_, const FamilyMemberNode* child) const;
+	FamilyMemberNode* node(int id, FamilyMemberNode* root_);
+	int parentIndex(const FamilyMemberNode* child) const;
+	void getPersonsFromFile(const string& filename);
+	void getTreeFromFile(const string& filename);
+	void exportToPersonFile(const string& filename);
+	void exportToCaseFile(const string& filename);
+	void exportPersonIndex(ofstream& file);
+	void exportParentIndex(ofstream& file);
+	string getName(FamilyMemberNode* r);
+	void displayWithConcaveShape(FamilyMemberNode* root_, int level);
 	/* editor lhy */
 	void Destroy(FamilyMemberNode*& r);
 	FamilyMemberNode* Parent(FamilyMemberNode* r, const FamilyMemberNode* cur) const;
@@ -29,6 +48,8 @@ class FamilyTree {
  public:
 	FamilyTree();
 	FamilyTree(const FamilyTree&);
+
+	/* editor hhl */
 	void display();
 	void describeGeneration(int n);
 	void query(string name);
@@ -36,8 +57,8 @@ class FamilyTree {
 	void addChild(string name);
 	void remove(string name);
 	void update(string name);
-	void importFromFile();
-	void exportToFile();
+	void importFromFile(string personFile, string caseFile);
+	void exportToFile(const string& personFile, const string& caseFile);
 
 	/* editor lhy */
 	~FamilyTree();
@@ -50,7 +71,6 @@ class FamilyTree {
 	FamilyTree& operator=(const FamilyTree& copy);
 	/**************/
 };
-
-vector<string> split(char *phrase, string delimiter);
+vector<string> split(char* phrase, string delimiter);
 
 #endif //FAMILY_TREE__FAMILYTREE_H_

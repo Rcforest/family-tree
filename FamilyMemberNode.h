@@ -15,10 +15,15 @@ struct Date {
 	Date(int y, int m, int d);
 
 	Date& operator=(const Date& t);
-	ostream& operator<<(ostream& out);
+	ostream& OutputDate(ostream& out) const;
+
+	friend class Person;
 };
 
+ostream& operator<<(ostream& out, const Date& date);
+
 struct Person {
+	int id;
 	string name;
 	Date birth;
 	bool marriage;
@@ -30,8 +35,10 @@ struct Person {
 	Person(string Name, Date Birth, bool Marriage, string Address = "NoAddress", bool Alive = false, Date Death = Date());
 
 	Person& operator=(const Person& temp);
-	ostream& operator<<(ostream& out);
+	ostream& OutputPerson(ostream& out) const;
 };
+
+ostream& operator<<(ostream& out, const Person& p);
 
 class FamilyMemberNode {
  protected:
@@ -41,7 +48,7 @@ class FamilyMemberNode {
  public:
 	FamilyMemberNode();
 	FamilyMemberNode(Person person, FamilyMemberNode *fChild=NULL, FamilyMemberNode *nSibling=NULL);
-
+	int id();
 	friend class FamilyTree;
 };
 

@@ -22,13 +22,13 @@ Date& Date::operator=(const Date& t)
 	return (*this);
 }
 
-ostream& Date::operator<<(ostream& out)
+ostream& Date::OutputDate(ostream& out) const
 {
-	out << year << "\b\b\b\b\t年" << month << "\b\b\t月" << day << "\b\b\t日" << endl;
+	out << year << "\b\b\b\b\t年" << month << "\b\b\t月" << day << "\b\b\t日\n";
 	return out;
 }
 
-Person::Person() :birth(), death()
+Person::Person() :birth(Date()), death(Date())
 {
 	name = "NoName";
 	marriage = false;
@@ -64,17 +64,37 @@ Person& Person::operator=(const Person& temp)
 	death = temp.death;
 	return (*this);
 }
-ostream& Person::operator<<(ostream& out)
+ostream& Person::OutputPerson(ostream& out) const
 {
-	// TODO: 在此处插入 return 语句
+	out << "姓名：" << name << '\n';
+	out << "出生日期：" << birth << '\n';
+	out << "婚姻状况：" << (marriage ? "Yes" : "No") << '\n';
+
 }
 FamilyMemberNode::FamilyMemberNode() {
-	firstChild = nullptr;
-	nextSibling = nullptr;
+	firstChild = NULL;
+	nextSibling = NULL;
 }
 
 FamilyMemberNode::FamilyMemberNode(Person p, FamilyMemberNode *fChild, FamilyMemberNode *nSibling) {
 	person = p;
 	firstChild = fChild;
 	nextSibling = nSibling;
+}
+
+int FamilyMemberNode::id()
+{
+	return person.id;
+}
+
+ostream& operator<<(ostream& out, const Date& date)
+{
+	date.OutputDate(out);
+	return out;
+}
+
+ostream& operator<<(ostream& out, const Person& p)
+{
+	p.OutputPerson(out);
+	return out;
 }
