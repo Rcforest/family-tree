@@ -3,6 +3,7 @@
 //
 #include "FamilyMemberNode.h"
 #include <vector>
+#include <queue>
 #include <fstream>
 #ifndef FAMILY_TREE__FAMILYTREE_H_
 #define FAMILY_TREE__FAMILYTREE_H_
@@ -21,7 +22,7 @@ class FamilyTree {
   void getTreeFromFile(const string &filename);
   void exportToPersonFile(const string &filename);
   void exportToCaseFile(const string &filename);
-  void exportPersonIndex(ofstream file);
+  void exportPersonIndex(ofstream &file);
   void exportParentIndex(ofstream &file);
   string getName(FamilyMemberNode *r);
   void displayWithConcaveShape(FamilyMemberNode *root_, int level);
