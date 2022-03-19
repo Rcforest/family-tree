@@ -43,18 +43,18 @@ void FamilyTree::Destroy(FamilyMemberNode*& r)
 
 FamilyMemberNode* FamilyTree::Parent(FamilyMemberNode* r, const FamilyMemberNode* cur) const
 {
-    if (r == NULL) return NULL;				// ¿Õ¶þ²æÊ÷
+    if (r == NULL) return NULL;				// ç©ºäºŒå‰æ ‘
 
-    FamilyMemberNode* p;		// º¢×Ó 
+    FamilyMemberNode* p;		// å­©å­ 
     for (p = FirstChild(r); p != NULL; p = NextSibling(p))
-        if (p == cur) return r;				// curÊÇrµÄº¢×Ó
+        if (p == cur) return r;				// curæ˜¯rçš„å­©å­
 
     for (p = FirstChild(r); p != NULL; p = NextSibling(p)) {
         FamilyMemberNode* q;
-        q = Parent(p, cur);			        // ÔÚ×ÓÊ÷ÉÏÇócurµÄË«Ç×	
-        if (q != NULL) return q;			// Ë«Ç×ÔÚ×ÓÊ÷ÉÏ
+        q = Parent(p, cur);			        // åœ¨å­æ ‘ä¸Šæ±‚curçš„åŒäº²	
+        if (q != NULL) return q;			// åŒäº²åœ¨å­æ ‘ä¸Š
     }
-    return NULL;							// Î´ÕÒµ½Ë«Ç×
+    return NULL;							// æœªæ‰¾åˆ°åŒäº²
 }
 
 FamilyMemberNode* FamilyTree::CopyTree(FamilyMemberNode* r)
@@ -87,6 +87,7 @@ FamilyMemberNode* FamilyTree::Find(FamilyMemberNode* r, string Name) const
     FamilyMemberNode* p;
     for (p = FirstChild(r); p != NULL; p = NextSibling(p))
         if (p->person.name == Name) return p;
+    return NULL;
 }
 
 FamilyMemberNode* FamilyTree::createTree(vector<int> parents, int root_)
@@ -289,119 +290,96 @@ void FamilyTree::exportParentIndex(ofstream& file)
     }
 }
 
-Status FamilyTree::GetNumOfGeneration(FamilyMemberNode* r, const FamilyMemberNode* p, int& n) const
-{
-    if (p == NULL)
-        return ERROR;
-    if (r == p)
-        return SUCCESS;
-    n++;
-    for (FamilyMemberNode* t = FirstChild(r); t != NULL; t = NextSibling(t))
-    {
-        return GetNumOfGeneration(t, p, n);
+Status FamilyTree::GetNumOfGeneration(FamilyMemberNode *r, const FamilyMemberNode *p, int &n) const {
+  if (p == NULL)
+    return ERROR;
+  if (r == p)
+    return SUCCESS;
+  n++;
+  for (FamilyMemberNode *t = FirstChild(r); t != NULL; t = NextSibling(t)) {
+    return GetNumOfGeneration(t, p, n);
+  }
+}
+
+FamilyTree::FamilyTree() {
+  root = NULL;
+  memberCount = 0;
+}
+
+FamilyTree::FamilyTree(const FamilyTree &copy) {
+  root = CopyTree(copy.root);
+}
+
+void FamilyTree::display() {
+  displayWithConcaveShape(root, 1);
+  cout << endl;
+}
+
+void FamilyTree::describeGeneration(int n) {
+}
+
+void FamilyTree::query(string name) {
+}
+void FamilyTree::relationship(string name1, string name2) {
+}
+void FamilyTree::addChild(string name) {
+}
+void FamilyTree::remove(string name) {
+}
+void FamilyTree::update(string name) {
+}
+
+void FamilyTree::importFromFile(string personFile, string caseFile) {
+  getPersonsFromFile(personFile);
+  getTreeFromFile(caseFile);
+}
+
+void FamilyTree::exportToFile(const string &personFile, const string &caseFile) {
+  exportToPersonFile(personFile);
+  exportToCaseFile(caseFile);
+}
+
+FamilyTree::~FamilyTree() {
+  Destroy(root);
+}
+
+FamilyMemberNode *FamilyTree::FirstChild(const FamilyMemberNode *r) const {
+  if (r == NULL)
+    return NULL;
+  return r->firstChild;
+}
+FamilyMemberNode *FamilyTree::NextSibling(const FamilyMemberNode *r) const {
+  if (r == NULL)
+    return NULL;
+  return r->nextSibling;
+}
+
+FamilyMemberNode *FamilyTree::Parent(const FamilyMemberNode *p) const {
+  return Parent(root, p);
+}
+
+FamilyMemberNode *FamilyTree::Find(string Name) const {
+  if (Name.empty())
+    cerr << "Invalid input of Name." << endl;
+  return Find(root, Name);
+}
+
+void FamilyTree::ShowInfoOf(string Name) const {
+    FamilyMemberNode *p = Find(Name);
+    if (p == NULL) {
+      cout << "æŸ¥æ— æ­¤äºº" << endl;
+      return;
     }
-}
-
-
-
-FamilyTree::FamilyTree()
-{
-    root = NULL;
-    memberCount = 0;
-}
-
-FamilyTree::FamilyTree(const FamilyTree& copy)
-{
-    root = CopyTree(copy.root);
-}
-
-void FamilyTree::display()
-{
-    displayWithConcaveShape(root, 1);
-    cout << endl;
-}
-
-void FamilyTree::describeGeneration(int n)
-{
-}
-
-void FamilyTree::query(string name)
-{
-}
-void FamilyTree::relationship(string name1, string name2)
-{
-}
-void FamilyTree::addChild(string name)
-{
-}
-void FamilyTree::remove(string name)
-{
-}
-void FamilyTree::update(string name)
-{
-}
-
-void FamilyTree::importFromFile(string personFile, string caseFile)
-{
-    getPersonsFromFile(personFile);
-    getTreeFromFile(caseFile);
-}
-
-void FamilyTree::exportToFile(const string& personFile, const string& caseFile)
-{
-    exportToPersonFile(personFile);
-    exportToCaseFile(caseFile);
-}
-
-FamilyTree::~FamilyTree()
-{
-    Destroy(root);
-}
-
-FamilyMemberNode* FamilyTree::FirstChild(const FamilyMemberNode* r) const
-{
-    if (r == NULL)
-        return NULL;
-    return r->firstChild;
-}
-FamilyMemberNode* FamilyTree::NextSibling(const FamilyMemberNode* r) const
-{
-    if (r == NULL)
-        return NULL;
-    return r->nextSibling;
-}
-
-FamilyMemberNode* FamilyTree::Parent(const FamilyMemberNode* p) const
-{
-    return Parent(root, p);
-}
-
-FamilyMemberNode* FamilyTree::Find(string Name) const
-{
-    if (Name.empty())
-        cerr << "Invalid input of Name." << endl;
-    return Find(root, Name);
-}
-
-void FamilyTree::ShowInfoOf(string Name) const
-{
-    FamilyMemberNode* p = Find(Name);
-    if (p == NULL)
-    {
-        cout << "²éÎÞ´ËÈË" << endl;
-        return;
-    }
-    cout << "±»²éÑ¯ÕßÐÅÏ¢£º" << endl;
+    cout << "è¢«æŸ¥è¯¢è€…ä¿¡æ¯ï¼š" << endl;
     cout << p->person << endl;
-    cout << "ÊÇ¼ÒÖÐµÚ" << GetNumOfGeneration(p) << "´ú³ÉÔ±" << endl;
-    cout << "Æä¸¸Ç×ÐÅÏ¢£º" << endl;
-    cout << "Æäº¢×ÓÐÅÏ¢£º" << endl;
+    cout << "æ˜¯å®¶ä¸­ç¬¬" << GetNumOfGeneration(p) << "ä»£æˆå‘˜" << endl;
+    cout << "å…¶çˆ¶äº²ä¿¡æ¯ï¼š" << endl;
+    cout << "å…¶å­©å­ä¿¡æ¯ï¼š" << endl;
     int i = 1;
-    for (FamilyMemberNode* t = FirstChild(p); t != NULL; t = NextSibling(t))
-    {
-        cout << "--µÚ" << i << "¸öº¢×Ó£º--" << endl;
-        cout << t->person << endl;
-        i++;
+    for (FamilyMemberNode *t = FirstChild(p); t != NULL; t = NextSibling(t)) {
+      cout << "--ç¬¬" << i << "ä¸ªå­©å­ï¼š--" << endl;
+      cout << t->person << endl;
+      i++;
     }
 }
 
@@ -422,16 +400,15 @@ void FamilyTree::ShowInfoOfGenNum(const int& n)
             cur = q.front();
             q.pop();
 
-        }
     }
+  }
 }
 
-int FamilyTree::GetNumOfGeneration(FamilyMemberNode* p) const
-{
+int FamilyTree::GetNumOfGeneration(FamilyMemberNode *p) const {
     int NumGeneration = 1;
     if (GetNumOfGeneration(root, p, NumGeneration) == SUCCESS)
         return NumGeneration;
-    cerr << "Î´ÕÒµ½¸Ã½Úµã" << endl;
+    cerr << "æœªæ‰¾åˆ°è¯¥èŠ‚ç‚¹" << endl;
 }
 
 FamilyTree& FamilyTree::operator=(const FamilyTree& copy)

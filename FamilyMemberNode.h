@@ -37,7 +37,7 @@ struct Person {
 	bool recorded;
 	Person();
 	Person(const Person& temp);
-	Person(string Name, Date Birth, bool Marriage, string Address = "NoAddress", bool Alive = false, Date Death = Date(), bool R = true,int ID = -1);
+    Person(string Name, const Date& Birth, bool Marriage, string Address = "NoAddress", bool Alive = false, const Date& Death = Date(), bool R = true,int ID = -1);
 
 	Person& operator=(const Person& temp);
 	ostream& OutputPerson(ostream& out) const;
@@ -52,7 +52,7 @@ protected:
 	FamilyMemberNode* nextSibling;
 public:
 	FamilyMemberNode();
-	FamilyMemberNode(Person person, FamilyMemberNode* fChild = NULL, FamilyMemberNode* nSibling = NULL);
+	FamilyMemberNode(const Person& person, FamilyMemberNode* fChild = NULL, FamilyMemberNode* nSibling = NULL);
 	int id();
 	friend class FamilyTree;
 };

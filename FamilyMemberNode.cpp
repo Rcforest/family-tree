@@ -32,7 +32,7 @@ Date& Date::operator=(const Date& t)
 
 ostream& Date::OutputDate(ostream& out) const
 {
-	out << year << "\b\b\b\b\tÄê" << month << "\b\b\tÔÂ" << day << "\b\b\tÈÕ\n";
+	out << year << "å¹´" << month << "æœˆ" << day << "æ—¥\n";
 	return out;
 }
 
@@ -56,33 +56,42 @@ Person::Person(const Person& temp)
 	recorded = temp.recorded;
 }
 
-Person::Person(string Name, Date Birth, bool Marriage, string Address, bool Alive, Date Death, bool R,int ID) {
-	name = name;
-	birth = birth;
-	marriage = marriage;
-	address = address;
-	alive = alive;
-	death = death;
-	recorded = R;
-	id = ID;
+Person::Person(string Name,
+               const Date &Birth,
+               bool Marriage,
+               string Address,
+               bool Alive,
+               const Date &Death,
+               bool R,
+               int ID) {
+    name = std::move(Name);
+    birth = Birth;
+    marriage = Marriage;
+    address = std::move(Address);
+    alive = Alive;
+    death = Death;
+    recorded = R;
+    id = ID;
 }
 Person& Person::operator=(const Person& temp)
 {
-	name = temp.name;
+	id = temp.id;
+    name = temp.name;
 	birth = temp.birth;
 	marriage = temp.marriage;
 	address = temp.address;
 	alive = temp.alive;
 	death = temp.death;
+    recorded = temp.recorded;
 	return (*this);
 }
 ostream& Person::OutputPerson(ostream& out) const
 {
-	out << "ÐÕÃû£º" << name << '\n';
-	out << "³öÉúÈÕÆÚ£º" << birth << '\n';
-	out << "»éÒö×´¿ö£º" << (marriage ? "Yes" : "No") << '\n';
-	out << "µØÖ·£º" << address << '\n';
-	out << "È¥ÊÀÈÕÆÚ£º";
+	out << "å§“åï¼š" << name << '\n';
+	out << "å‡ºç”Ÿæ—¥æœŸï¼š" << birth << '\n';
+	out << "å©šå§»çŠ¶å†µï¼š" << (marriage ? "Yes" : "No") << '\n';
+	out << "åœ°å€ï¼š" << address << '\n';
+	out << "åŽ»ä¸–æ—¥æœŸï¼š";
 	if (alive)
 		out << "None";
 	else
@@ -95,10 +104,10 @@ FamilyMemberNode::FamilyMemberNode() {
 	nextSibling = NULL;
 }
 
-FamilyMemberNode::FamilyMemberNode(Person p, FamilyMemberNode* fChild, FamilyMemberNode* nSibling) {
-	person = p;
-	firstChild = fChild;
-	nextSibling = nSibling;
+FamilyMemberNode::FamilyMemberNode(const Person &p, FamilyMemberNode *fChild, FamilyMemberNode *nSibling) {
+    person = p;
+    firstChild = fChild;
+    nextSibling = nSibling;
 }
 
 int FamilyMemberNode::id()
