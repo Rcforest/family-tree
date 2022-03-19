@@ -1,5 +1,49 @@
 #include "FamilyTree.h"
-#include "FamilyTree.cpp"
+//#include "FamilyTree.cpp"
+
+#include<iostream>
+#include<conio.h>
+
+int Choice(const char* prompt, const char* options = "");	// º¯ÊıÉùÃ÷
+
+int Pos(char ch, const char* str)			// ·µ»ØÖ¸¶¨×Ö·ûchÔÚ×Ö·û´®strÖĞµÄÏÂ±ê¡£²»´æÔÚÊ±·µ»Ø-1
+{
+    int i;
+    for (i = 0; str[i] != '\0'; i++)
+        if (ch == str[i])
+            return i;
+    return -1;
+}
+
+int Choice(const char* prompt, const char* options)		// º¯Êı¶¨Òå¡£Êä³öÌáÊ¾ĞÅÏ¢prompt£¬ÊäÈëÑ¡ÔñµÄ×Ö·û²¢·µ»Ø¡£
+{
+    int key;
+    cout << prompt << "{";
+    for (int i = 0; options[i] != '\0'; i++)
+    {
+        if (' ' < (options[i] & 0x7f) && (options[i] & 0x7f) < 127)	// Ñ¡ÏîoptionsÖĞµÄ¿É´òÓ¡×Ö·û
+            cout << options[i] << ' ';
+        else														// Ñ¡ÏîoptionsÖĞµÄ²¿·Ö¿ØÖÆ×Ö·û
+        {
+            switch (options[i])
+            {
+            case '\t':   cout << "[Tab] ";   break;					// Ñ¡ÏîÖĞµÄTab×Ö·û'\t'£¨¼´ASCII±àÂë9£©
+            case '\x1b': cout << "[Esc] ";   break;					// Ñ¡ÏîÖĞµÄEsc×Ö·û'\x1b'£¨¼´ASCII±àÂë27£©
+            case ' ':    cout << "[Space] "; break;					// Ñ¡ÏîÖĞµÄ¿Õ¸ñ×Ö·û' '£¨¼´ASCII±àÂë32£©
+            }
+        }
+    }
+    cout << "\b}: ";					// '\b'ÍË¸ñ¡£ÏÈÍËÒ»¸ñ£¬ÔÚÊä³öÓÒ»¨À¨ºÅ
+    do
+    {
+        key = getch();
+    } while (options[0] != '\0' && Pos(key, options) < 0); // ÈôoptionsÎª¿Õ³¤¶ÈÎª0µÄ×Ö·û´®£¬ÔòÊäÈëÎŞÏŞÖÆ£»·ñÔòÊäÈëÏîÓ¦¸ÃÔÚoptinsÖĞ¡£
+    cout << endl;
+    return key;
+}
+
+
+
 int main() {
     int n;
     string name1, name2;
@@ -7,21 +51,21 @@ int main() {
     tree.importFromFile("test/person.txt", "test/case01.txt");
     int item;
     while (true) {
-        cout << "1. æ˜¾ç¤ºå®¶è°±" << endl;
-        cout << "2. æè¿°ç¬¬nä»£" << endl;
-        cout << "3. æŸ¥è¯¢ä¿¡æ¯" << endl;
-        cout << "4. ç¡®å®šå…³ç³»" << endl;
-        cout << "5. æ·»åŠ å­©å­" << endl;
-        cout << "6. åˆ é™¤æŸäºº" << endl;
-        cout << "7. ä¿®æ”¹æŸäººä¿¡æ¯" << endl;
-        cout << "0. é€€å‡º" << endl;
-        cin >> item;
+        cout << "1. ÏÔÊ¾¼ÒÆ×" << endl;
+        cout << "2. ÃèÊöµÚn´ú" << endl;
+        cout << "3. ²éÑ¯ĞÅÏ¢" << endl;
+        cout << "4. È·¶¨¹ØÏµ" << endl;
+        cout << "5. Ìí¼Óº¢×Ó" << endl;
+        cout << "6. É¾³ıÄ³ÈË" << endl;
+        cout << "7. ĞŞ¸ÄÄ³ÈËĞÅÏ¢" << endl;
+        cout << "0. ÍË³ö[Esc]" << endl;
+        item = Choice("ÇëÑ¡Ôñ£º", "12345670\x1b")-48;
         switch (item) {
         case 1:
             tree.display();
             break;
         case 2:
-            cout << "å§“å: ";
+            cout << "ĞÕÃû: ";
             cin >> name1;
             tree.query(name1);
             break;
@@ -31,28 +75,31 @@ int main() {
             tree.describeGeneration(n);
             break;
         case 4:
-            cout << "ç¬¬ä¸€äººå§“å: ";
+            cout << "µÚÒ»ÈËĞÕÃû: ";
             cin >> name1;
-            cout << "ç¬¬äºŒäººå§“å: ";
+            cout << "µÚ¶şÈËĞÕÃû: ";
             cin >> name2;
             tree.relationship(name1, name2);
             break;
         case 5:
-            cout << "çˆ¶äº²å§“å: " << endl;
+            cout << "¸¸Ç×ĞÕÃû: " << endl;
             cin >> name1;
             tree.addChild(name1);
             break;
         case 6:
-            cout << "å§“å" << endl;
+            cout << "ĞÕÃû" << endl;
             cin >> name1;
             tree.remove(name1);
             break;
         case 7:
-            cout << "å§“å" << endl;
+            cout << "ĞÕÃû" << endl;
             cin >> name1;
             tree.update(name1);
             break;
         case 0:
+            tree.exportToFile("test/person_out.txt", "test/case01_out.txt");
+            exit(0);
+        case -21:
             tree.exportToFile("test/person_out.txt", "test/case01_out.txt");
             exit(0);
         default:
