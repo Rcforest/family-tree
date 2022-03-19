@@ -93,7 +93,7 @@ FamilyMemberNode* FamilyTree::createTree(vector<int> parents, int root_)
 {
     int index = persons_id[root_] - 1;
     FamilyMemberNode* r = new FamilyMemberNode(persons[index]);
-    FamilyMemberNode* subTreeRoot, * cur;
+    FamilyMemberNode* subTreeRoot, * cur=NULL;
     for (int i = 0; i < memberCount; ++i) {
         if (parents[i] == root_) {
             subTreeRoot = createTree(parents, i);
@@ -302,21 +302,12 @@ Status FamilyTree::GetNumOfGeneration(FamilyMemberNode* r, const FamilyMemberNod
     }
 }
 
-void FamilyTree::ShowInfoOf(string Name) const
-{
-    FamilyMemberNode* p = Find(Name);
-    if (p == NULL)
-    {
-        cout << "查无此人" << endl;
-        return;
-    }
-    cout << p->person << endl;
 
-}
 
 FamilyTree::FamilyTree()
 {
     root = NULL;
+    memberCount = 0;
 }
 
 FamilyTree::FamilyTree(const FamilyTree& copy)
@@ -389,7 +380,50 @@ FamilyMemberNode* FamilyTree::Find(string Name) const
 {
     if (Name.empty())
         cerr << "Invalid input of Name." << endl;
-    return Find(root,Name);
+    return Find(root, Name);
+}
+
+void FamilyTree::ShowInfoOf(string Name) const
+{
+    FamilyMemberNode* p = Find(Name);
+    if (p == NULL)
+    {
+        cout << "查无此人" << endl;
+        return;
+    }
+    cout << "被查询者信息：" << endl;
+    cout << p->person << endl;
+    cout << "是家中第" << GetNumOfGeneration(p) << "代成员" << endl;
+    cout << "其父亲信息：" << endl;
+    cout << "其孩子信息：" << endl;
+    int i = 1;
+    for (FamilyMemberNode* t = FirstChild(p); t != NULL; t = NextSibling(t))
+    {
+        cout << "--第" << i << "个孩子：--" << endl;
+        cout << t->person << endl;
+        i++;
+    }
+}
+
+void FamilyTree::ShowInfoOfGenNum(const int& n)
+{
+    if (n <= 0)
+        cerr << "Invalid input of the num of generation." << endl;
+    else if (root == NULL)
+        return;
+    else
+    {
+        int genNum = 1;
+        queue<FamilyMemberNode*> q;
+        FamilyMemberNode* cur, * p;
+        q.push(root);
+        while (!q.empty())
+        {
+            cur = q.front();
+            q.pop();
+
+        }
+    }
 }
 
 int FamilyTree::GetNumOfGeneration(FamilyMemberNode* p) const
@@ -410,7 +444,7 @@ FamilyTree& FamilyTree::operator=(const FamilyTree& copy)
     return (*this);
 }
 
-vector<string> split(char* phrase, string delimiter)
+vector<string> split(string phrase, string delimiter)
 {
     vector<string> list;
     string s = string(std::move(phrase));

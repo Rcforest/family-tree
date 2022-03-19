@@ -1,3 +1,4 @@
+#pragma once
 //
 // Created by Rcforest on 2022/3/16.
 //
@@ -5,7 +6,7 @@
 #include <queue>
 #include <fstream>
 #include "FamilyMemberNode.h"
-#include "FamilyMemberNode.cpp"
+//#include "FamilyMemberNode.cpp"
 #ifndef FAMILY_TREE__FAMILYTREE_H_
 #define FAMILY_TREE__FAMILYTREE_H_
 #define MAX 100
@@ -15,9 +16,9 @@ enum Status
 };
 
 class FamilyTree {
- protected:
+protected:
 
-	FamilyMemberNode *root;
+	FamilyMemberNode* root;
 	Person persons[MAX];
 	int persons_id[MAX];
 	int memberCount;
@@ -41,11 +42,9 @@ class FamilyTree {
 	FamilyMemberNode* Parent(FamilyMemberNode* r, const FamilyMemberNode* cur) const;
 	FamilyMemberNode* CopyTree(FamilyMemberNode* r);
 	FamilyMemberNode* Find(FamilyMemberNode* r, string Name) const;
-	Status GetNumOfGeneration(FamilyMemberNode* r,const FamilyMemberNode* p, int& n) const;
-
-	void ShowInfoOf(string name) const;
+	Status GetNumOfGeneration(FamilyMemberNode* r, const FamilyMemberNode* p, int& n) const;
 	/**************/
- public:
+public:
 	FamilyTree();
 	FamilyTree(const FamilyTree&);
 
@@ -65,12 +64,13 @@ class FamilyTree {
 	FamilyMemberNode* FirstChild(const FamilyMemberNode* r) const;
 	FamilyMemberNode* NextSibling(const FamilyMemberNode* r) const;
 	FamilyMemberNode* Parent(const FamilyMemberNode* p) const;
-	FamilyMemberNode* Find(string Name) const; //鏍规嵁鍚嶅瓧纭畾鑺傜偣
-
+	FamilyMemberNode* Find(string Name) const;	//根据名字确定节点
+	void ShowInfoOf(string Name) const;			//按照姓名查询，输出成员信息
+	void ShowInfoOfGenNum(const int& n);
 	int GetNumOfGeneration(FamilyMemberNode* p) const;
 	FamilyTree& operator=(const FamilyTree& copy);
 	/**************/
 };
-vector<string> split(char* phrase, string delimiter);
+vector<string> split(string phrase, string delimiter);
 
 #endif //FAMILY_TREE__FAMILYTREE_H_

@@ -1,6 +1,9 @@
+#pragma once
 //
 // Created by Rcforest on 2022/3/16.
 //
+#pragma warning(disable: 4290)			// for VS2019
+#pragma warning(disable: 4996)			// for VS2019
 #include <string>
 #include<iostream>
 using namespace std;
@@ -12,6 +15,7 @@ struct Date {
 	int month;
 	int day;
 	Date();
+	Date(const Date& t);
 	Date(int y, int m, int d);
 
 	Date& operator=(const Date& t);
@@ -30,9 +34,10 @@ struct Person {
 	string address;
 	bool alive;
 	Date death;
+	bool recorded;
 	Person();
 	Person(const Person& temp);
-	Person(string Name, Date Birth, bool Marriage, string Address = "NoAddress", bool Alive = false, Date Death = Date());
+	Person(string Name, Date Birth, bool Marriage, string Address = "NoAddress", bool Alive = false, Date Death = Date(), bool R = true,int ID = -1);
 
 	Person& operator=(const Person& temp);
 	ostream& OutputPerson(ostream& out) const;
@@ -41,13 +46,13 @@ struct Person {
 ostream& operator<<(ostream& out, const Person& p);
 
 class FamilyMemberNode {
- protected:
+protected:
 	Person person;
-	FamilyMemberNode *firstChild;
-	FamilyMemberNode *nextSibling;
- public:
+	FamilyMemberNode* firstChild;
+	FamilyMemberNode* nextSibling;
+public:
 	FamilyMemberNode();
-	FamilyMemberNode(Person person, FamilyMemberNode *fChild=NULL, FamilyMemberNode *nSibling=NULL);
+	FamilyMemberNode(Person person, FamilyMemberNode* fChild = NULL, FamilyMemberNode* nSibling = NULL);
 	int id();
 	friend class FamilyTree;
 };
