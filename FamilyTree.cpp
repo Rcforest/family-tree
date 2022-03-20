@@ -92,7 +92,7 @@ FamilyMemberNode* FamilyTree::Find(FamilyMemberNode* r, string Name) const
 
 FamilyMemberNode* FamilyTree::createTree(vector<int> parents, int root_)
 {
-    int index = persons_id[root_] - 1;
+    int index = persons_id[root_];
     FamilyMemberNode* r = new FamilyMemberNode(persons[index]);
     FamilyMemberNode* subTreeRoot, * cur=NULL;
     for (int i = 0; i < memberCount; ++i) {
