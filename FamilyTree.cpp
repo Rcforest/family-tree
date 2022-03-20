@@ -80,20 +80,25 @@ FamilyMemberNode* FamilyTree::CopyTree(FamilyMemberNode* r)
     return t;
 }
 
-FamilyMemberNode* FamilyTree::Find(FamilyMemberNode* r, string Name) const
+FamilyMemberNode* FamilyTree::Find(FamilyMemberNode* r, const string& Name) const
 {
-    if (r->person.name == Name)
-        return r;
+    if (r == NULL) return NULL;
+    if (r->person.name == Name) return r;
     FamilyMemberNode* p;
     for (p = FirstChild(r); p != NULL; p = NextSibling(p))
         if (p->person.name == Name) return p;
-    return NULL;
+    for (p = FirstChild(r); p != NULL; p = NextSibling(p))
+    {
+        FamilyMemberNode* q;
+        q = Find(p,Name);
+        if(q!=NULL) return q;
+    }
 }
 
 FamilyMemberNode* FamilyTree::createTree(vector<int> parents, int root_)
 {
-    int index = persons_id[root_] - 1;
-    FamilyMemberNode* r = new FamilyMemberNode(persons[index]);
+    int index = persons_id[root_];
+    FamilyMemberNode* r = new FamilyMemberNode(persons[root_]);
     FamilyMemberNode* subTreeRoot, * cur=NULL;
     for (int i = 0; i < memberCount; ++i) {
         if (parents[i] == root_) {
@@ -108,6 +113,7 @@ FamilyMemberNode* FamilyTree::createTree(vector<int> parents, int root_)
             }
         }
     }
+
     return r;
 }
 
@@ -169,7 +175,7 @@ void FamilyTree::getPersonsFromFile(const string& filename)
         vector<string> list = split(line, ", ");
         persons[i].id = stoi(list[0]);
         persons[i].name = list[1];
-        cout << persons[i].name << endl;
+//        cout << persons[i].name << endl;
         persons[i].birth = Date(stoi(list[2]), stoi(list[3]), stoi(list[4]));
         persons[i].marriage = stoi(list[5]);
         persons[i].address = list[6];
@@ -290,15 +296,17 @@ void FamilyTree::exportParentIndex(ofstream& file)
     }
 }
 
-Status FamilyTree::GetNumOfGeneration(FamilyMemberNode *r, const FamilyMemberNode *p, int &n) const {
-  if (p == NULL)
-    return ERROR;
-  if (r == p)
-    return SUCCESS;
-  n++;
-  for (FamilyMemberNode *t = FirstChild(r); t != NULL; t = NextSibling(t)) {
-    return GetNumOfGeneration(t, p, n);
-  }
+void FamilyTree::GetNumOfGeneration(FamilyMemberNode *r, const FamilyMemberNode *p,int level, int &result) const 
+{
+    if(r!=NULL)
+    {
+        level++;
+        if(r==p){ result = level; return ;}
+    }
+    if(FirstChild(r)!=NULL)
+        GetNumOfGeneration(FirstChild(r), p, level, result);
+	if(NextSibling(r)!=NULL)
+		GetNumOfGeneration(NextSibling(r), p, level-1, result);
 }
 
 FamilyTree::FamilyTree() {
@@ -374,6 +382,7 @@ void FamilyTree::ShowInfoOf(string Name) const {
     cout << p->person << endl;
     cout << "是家中第" << GetNumOfGeneration(p) << "代成员" << endl;
     cout << "其父亲信息：" << endl;
+    cout << Parent(p)->person << endl;
     cout << "其孩子信息：" << endl;
     int i = 1;
     for (FamilyMemberNode *t = FirstChild(p); t != NULL; t = NextSibling(t)) {
@@ -391,7 +400,7 @@ void FamilyTree::ShowInfoOfGenNum(const int& n)
         return;
     else
     {
-        int genNum = 1;
+        int genNum = 0;
         queue<FamilyMemberNode*> q;
         FamilyMemberNode* cur, * p;
         q.push(root);
@@ -399,14 +408,23 @@ void FamilyTree::ShowInfoOfGenNum(const int& n)
         {
             cur = q.front();
             q.pop();
-
+            if (GetNumOfGeneration(cur) == n)
+            {
+                cout << cur->person.name << '\t';
+                genNum++;
+            }
+            for (p = FirstChild(cur); p != NULL; p = NextSibling(p))
+                q.push(p);
+        }
+        cout << endl;
+        cout << "第" << n << "代共有" << genNum << "人" << endl;
     }
-  }
 }
 
 int FamilyTree::GetNumOfGeneration(FamilyMemberNode *p) const {
-    int NumGeneration = 1;
-    if (GetNumOfGeneration(root, p, NumGeneration) == SUCCESS)
+    int NumGeneration = 0;
+    GetNumOfGeneration(root, p, NumGeneration,NumGeneration);
+    if (NumGeneration > 0)
         return NumGeneration;
     cerr << "未找到该节点" << endl;
 }
