@@ -3,6 +3,7 @@
 //
 
 #include "FamilyMemberNode.h"
+using namespace std;
 Date::Date()
 {
 	year = month = day = 0;
@@ -32,7 +33,7 @@ Date& Date::operator=(const Date& t)
 
 ostream& Date::OutputDate(ostream& out) const
 {
-	out << year << "年" << month << "月" << day << "日\n";
+	out << year << "年" << month << "月" << day << "日";
 	return out;
 }
 
@@ -74,17 +75,7 @@ Person::Person(string Name,
     id = ID;
 }
 Person& Person::operator=(const Person& temp)
-{
-	id = temp.id;
-    name = temp.name;
-	birth = temp.birth;
-	marriage = temp.marriage;
-	address = temp.address;
-	alive = temp.alive;
-	death = temp.death;
-    recorded = temp.recorded;
-	return (*this);
-}
+= default;
 ostream& Person::OutputPerson(ostream& out) const
 {
 	out << "姓名：" << name << '\n';

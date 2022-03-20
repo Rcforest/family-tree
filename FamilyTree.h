@@ -5,11 +5,12 @@
 #include <vector>
 #include <queue>
 #include <fstream>
+#include <algorithm>
 #include "FamilyMemberNode.h"
-//#include "FamilyMemberNode.cpp"
 #ifndef FAMILY_TREE__FAMILYTREE_H_
 #define FAMILY_TREE__FAMILYTREE_H_
 #define MAX 100
+using namespace std;
 enum Status
 {
 	SUCCESS, FAILED, ERROR
@@ -41,8 +42,8 @@ protected:
 	void Destroy(FamilyMemberNode*& r);
 	FamilyMemberNode* Parent(FamilyMemberNode* r, const FamilyMemberNode* cur) const;
 	FamilyMemberNode* CopyTree(FamilyMemberNode* r);
-	FamilyMemberNode* Find(FamilyMemberNode* r, string Name) const;
-	Status GetNumOfGeneration(FamilyMemberNode* r, const FamilyMemberNode* p, int& n) const;
+	FamilyMemberNode* Find(FamilyMemberNode* r, const string& Name) const;
+	void GetNumOfGeneration(FamilyMemberNode* r, const FamilyMemberNode* p,int level, int& result) const;
 	/**************/
 public:
 	FamilyTree();
@@ -64,8 +65,8 @@ public:
 	FamilyMemberNode* FirstChild(const FamilyMemberNode* r) const;
 	FamilyMemberNode* NextSibling(const FamilyMemberNode* r) const;
 	FamilyMemberNode* Parent(const FamilyMemberNode* p) const;
-	FamilyMemberNode* Find(string Name) const;	//¸ù¾İÃû×ÖÈ·¶¨½Úµã
-	void ShowInfoOf(string Name) const;			//°´ÕÕĞÕÃû²éÑ¯£¬Êä³ö³ÉÔ±ĞÅÏ¢
+	FamilyMemberNode* Find(string Name) const;	//æ ¹æ®åå­—ç¡®å®šèŠ‚ç‚¹
+	void ShowInfoOf(string Name) const;			//æŒ‰ç…§å§“åæŸ¥è¯¢ï¼Œè¾“å‡ºæˆå‘˜ä¿¡æ¯
 	void ShowInfoOfGenNum(const int& n);
 	int GetNumOfGeneration(FamilyMemberNode* p) const;
 	FamilyTree& operator=(const FamilyTree& copy);
