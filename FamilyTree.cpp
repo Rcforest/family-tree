@@ -332,6 +332,29 @@ void FamilyTree::relationship(string name1, string name2) {
 void FamilyTree::addChild(string name) {
 }
 void FamilyTree::remove(string name) {
+  FamilyMemberNode *person = Find(root, name);
+  if (person == NULL) {
+    cout << "输入信息有误!" << endl;
+    return;
+  }
+  if (parent(root, person) != NULL) {
+    FamilyMemberNode *p = parent(root, person);
+    if (p->firstChild == person) {
+      p->firstChild = person->nextSibling;
+      delete person;
+      person = NULL;
+    } else {
+      FamilyMemberNode *p1 = p->firstChild;
+      while (p1->nextSibling != p) {
+        p1 = p1->nextSibling;
+      }
+      p1->nextSibling = person->nextSibling;
+      delete person;
+      person = NULL;
+    }
+  } else {
+    cout << "第一代人无法删除!" << endl;
+  }
 }
 void FamilyTree::update(string name) {
 }
