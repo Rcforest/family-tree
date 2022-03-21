@@ -382,7 +382,11 @@ void FamilyTree::ShowInfoOf(string Name) const {
     cout << p->person << endl;
     cout << "是家中第" << GetNumOfGeneration(p) << "代成员" << endl;
     cout << "其父亲信息：" << endl;
-    cout << Parent(p)->person << endl;
+    FamilyMemberNode* q = Parent(p);
+    if (q != NULL)
+        cout << q->person << endl;
+    else
+        cout << "None" << endl;
     cout << "其孩子信息：" << endl;
     int i = 1;
     for (FamilyMemberNode *t = FirstChild(p); t != NULL; t = NextSibling(t)) {
