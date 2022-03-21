@@ -19,7 +19,7 @@ void FamilyTree::displayWithConcaveShape(FamilyMemberNode* root_, int level)
     FamilyMemberNode* p;
     if (root_ != nullptr) {
         cout << endl;
-        string name = getName(root_);
+        string name = root_->person.name;
         for (int i = 0; i < level - 1; ++i) {
             cout << "   ";
         }
@@ -45,16 +45,16 @@ FamilyMemberNode* FamilyTree::Parent(FamilyMemberNode* r, const FamilyMemberNode
 {
     if (r == NULL) return NULL;				// ç©ºäºŒå‰æ ‘
 
-    FamilyMemberNode* p;		// å­©å­ 
+    FamilyMemberNode *p;        // º¢×Ó
     for (p = FirstChild(r); p != NULL; p = NextSibling(p))
-        if (p == cur) return r;				// curæ˜¯rçš„å­©å­
+        if (p == cur) return r;                // curÊÇrµÄº¢×Ó
 
     for (p = FirstChild(r); p != NULL; p = NextSibling(p)) {
-        FamilyMemberNode* q;
-        q = Parent(p, cur);			        // åœ¨å­æ ‘ä¸Šæ±‚curçš„åŒäº²	
-        if (q != NULL) return q;			// åŒäº²åœ¨å­æ ‘ä¸Š
+        FamilyMemberNode *q;
+        q = Parent(p, cur);                    // ÔÚ×ÓÊ÷ÉÏÇócurµÄË«Ç×
+        if (q != NULL) return q;            // Ë«Ç×ÔÚ×ÓÊ÷ÉÏ
     }
-    return NULL;							// æœªæ‰¾åˆ°åŒäº²
+    return NULL;                            // Î´ÕÒµ½Ë«Ç×
 }
 
 FamilyMemberNode* FamilyTree::CopyTree(FamilyMemberNode* r)
@@ -175,7 +175,6 @@ void FamilyTree::getPersonsFromFile(const string& filename)
         vector<string> list = split(line, ", ");
         persons[i].id = stoi(list[0]);
         persons[i].name = list[1];
-//        cout << persons[i].name << endl;
         persons[i].birth = Date(stoi(list[2]), stoi(list[3]), stoi(list[4]));
         persons[i].marriage = stoi(list[5]);
         persons[i].address = list[6];
@@ -375,22 +374,22 @@ FamilyMemberNode *FamilyTree::Find(string Name) const {
 void FamilyTree::ShowInfoOf(string Name) const {
     FamilyMemberNode *p = Find(Name);
     if (p == NULL) {
-      cout << "æŸ¥æ— æ­¤äºº" << endl;
+      cout << "²éÎÞ´ËÈË" << endl;
       return;
     }
-    cout << "è¢«æŸ¥è¯¢è€…ä¿¡æ¯ï¼š" << endl;
+    cout << "±»²éÑ¯ÕßÐÅÏ¢£º" << endl;
     cout << p->person << endl;
-    cout << "æ˜¯å®¶ä¸­ç¬¬" << GetNumOfGeneration(p) << "ä»£æˆå‘˜" << endl;
-    cout << "å…¶çˆ¶äº²ä¿¡æ¯ï¼š" << endl;
-    FamilyMemberNode* q = Parent(p);
+    cout << "ÊÇ¼ÒÖÐµÚ" << GetNumOfGeneration(p) << "´ú³ÉÔ±" << endl;
+    cout << "Æä¸¸Ç×ÐÅÏ¢£º" << endl;
+    FamilyMemberNode *q = Parent(p);
     if (q != NULL)
         cout << q->person << endl;
     else
         cout << "None" << endl;
-    cout << "å…¶å­©å­ä¿¡æ¯ï¼š" << endl;
+    cout << "Æäº¢×ÓÐÅÏ¢£º" << endl;
     int i = 1;
     for (FamilyMemberNode *t = FirstChild(p); t != NULL; t = NextSibling(t)) {
-      cout << "--ç¬¬" << i << "ä¸ªå­©å­ï¼š--" << endl;
+      cout << "--µÚ" << i << "¸öº¢×Ó£º--" << endl;
       cout << t->person << endl;
       i++;
     }
@@ -421,7 +420,7 @@ void FamilyTree::ShowInfoOfGenNum(const int& n)
                 q.push(p);
         }
         cout << endl;
-        cout << "ç¬¬" << n << "ä»£å…±æœ‰" << genNum << "äºº" << endl;
+        cout << "ç¬?" << n << "ä»£å…±æœ?" << genNum << "äº?" << endl;
     }
 }
 
@@ -430,7 +429,7 @@ int FamilyTree::GetNumOfGeneration(FamilyMemberNode *p) const {
     GetNumOfGeneration(root, p, NumGeneration,NumGeneration);
     if (NumGeneration > 0)
         return NumGeneration;
-    cerr << "æœªæ‰¾åˆ°è¯¥èŠ‚ç‚¹" << endl;
+    cerr << "Î´ÕÒµ½¸Ã½Úµã" << endl;
 }
 
 FamilyTree& FamilyTree::operator=(const FamilyTree& copy)

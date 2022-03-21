@@ -33,7 +33,7 @@ Date& Date::operator=(const Date& t)
 
 ostream& Date::OutputDate(ostream& out) const
 {
-	out << year << "å¹´" << month << "æœˆ" << day << "æ—¥";
+	out << year << "Äê" << month << "ÔÂ" << day << "ÈÕ";
 	return out;
 }
 
@@ -78,11 +78,11 @@ Person& Person::operator=(const Person& temp)
 = default;
 ostream& Person::OutputPerson(ostream& out) const
 {
-	out << "å§“åï¼š" << name << '\n';
-	out << "å‡ºç”Ÿæ—¥æœŸï¼š" << birth << '\n';
-	out << "å©šå§»çŠ¶å†µï¼š" << (marriage ? "Yes" : "No") << '\n';
-	out << "åœ°å€ï¼š" << address << '\n';
-	out << "åŽ»ä¸–æ—¥æœŸï¼š";
+	out << "ÐÕÃû£º" << name << '\n';
+	out << "³öÉúÈÕÆÚ£º" << birth << '\n';
+	out << "»éÒö×´¿ö£º" << (marriage ? "Yes" : "No") << '\n';
+	out << "µØÖ·£º" << address << '\n';
+	out << "È¥ÊÀÈÕÆÚ£º";
 	if (alive)
 		out << "None";
 	else
