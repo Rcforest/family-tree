@@ -317,6 +317,56 @@ void FamilyTree::relationship(string name1, string name2) {
     cout << name2 << " 不在家族信息中！！" << endl;
 }
 void FamilyTree::addChild(string name) {
+  FamilyMemberNode *p = Find(name);
+  if (!p) {
+    cout << name << "不在家族信息中！！" << endl;
+    return;
+  }
+  int num = 0, i = 0;
+  cout << "添加孩子个数：";
+  cin >> num;
+  Person children[num];
+  int flag = 1;
+
+  while (num--) {
+    int id = memberCount++;
+    children[i].id = id;
+    cout << "请输入姓名：" << endl;
+    cin >> children[i].name;
+    cout << "出生日期：(eg:0000 00 00)" << endl;
+    int y, m, d;
+    cin >> y >> m >> d;
+    children[i].birth = Date(y, m, d);
+    cout << "是否婚姻：0/1" << endl;
+    cin >> children[i].marriage;
+    cout << "住址：" << endl;
+    cin >> children[i].address;
+    cout << "是否在世：0/1" << endl;
+    cin >> children[i].alive;
+    if (!children[i].alive) {
+      cout << "去世日期：(eg:0000 00 00)" << endl;
+      cin >> y >> m >> d;
+      children[i].death = Date(y, m, d);
+    }
+    if (flag) {
+      if (!p->firstChild) {
+        p->firstChild = new FamilyMemberNode(children[i]);
+        p = p->firstChild;
+        flag = 0;
+      } else {
+        p = p->firstChild;
+        while (p->nextSibling)
+          p = p->nextSibling;
+        p->nextSibling = new FamilyMemberNode(children[i]);
+        p = p->nextSibling;
+        flag = 0;
+      }
+    } else {
+      p->nextSibling = new FamilyMemberNode(children[i]);
+      p = p->nextSibling;
+    }
+    i++;
+  }
 }
 void FamilyTree::remove(string name) {
   FamilyMemberNode *person = Find(root, name);
