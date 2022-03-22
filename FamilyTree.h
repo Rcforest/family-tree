@@ -20,23 +20,21 @@ class FamilyTree {
 protected:
 
 	FamilyMemberNode* root;
-	Person persons[MAX];
 	int persons_id[MAX];
 	int memberCount;
 	//assitant func
 
 	/* editor hhl*/
-	FamilyMemberNode* createTree(vector<int> parents, int root_);
+	FamilyMemberNode* createTree(Person (&persons)[MAX], vector<int> parents, int root_);
 	FamilyMemberNode* parent(FamilyMemberNode* root_, const FamilyMemberNode* child) const;
 	FamilyMemberNode* node(int id, FamilyMemberNode* root_);
 	int parentIndex(const FamilyMemberNode* child) const;
-	void getPersonsFromFile(const string& filename);
-	void getTreeFromFile(const string& filename);
+	void getPersonsFromFile(const string& filename, Person (&persons)[MAX]);
+	void getTreeFromFile(const string& filename, Person (&persons)[MAX]);
 	void exportToPersonFile(const string& filename);
 	void exportToCaseFile(const string& filename);
 	void exportPersonIndex(ofstream& file);
 	void exportParentIndex(ofstream& file);
-	string getName(FamilyMemberNode* r);
 	void displayWithConcaveShape(FamilyMemberNode* root_, int level);
 	/* editor lhy */
 	void Destroy(FamilyMemberNode*& r);

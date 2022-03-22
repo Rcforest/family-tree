@@ -5,14 +5,6 @@
 #include "FamilyTree.h"
 
 
-string FamilyTree::getName(FamilyMemberNode* r)
-{
-    for (const Person& i : persons) {
-        if (i.id == r->id())
-            return i.name;
-    }
-    return "\0";
-}
 
 void FamilyTree::displayWithConcaveShape(FamilyMemberNode* root_, int level)
 {
@@ -95,14 +87,14 @@ FamilyMemberNode* FamilyTree::Find(FamilyMemberNode* r, const string& Name) cons
     }
 }
 
-FamilyMemberNode* FamilyTree::createTree(vector<int> parents, int root_)
+FamilyMemberNode* FamilyTree::createTree(Person (&persons)[MAX], vector<int> parents, int root_)
 {
     int index = persons_id[root_];
     FamilyMemberNode* r = new FamilyMemberNode(persons[index]);
     FamilyMemberNode* subTreeRoot, * cur=NULL;
     for (int i = 0; i < memberCount; ++i) {
         if (parents[i] == root_) {
-            subTreeRoot = createTree(parents, i);
+            subTreeRoot = createTree(persons, parents, i);
             if (r->firstChild == nullptr) {
                 r->firstChild = subTreeRoot;
                 cur = subTreeRoot;
@@ -156,37 +148,36 @@ int FamilyTree::parentIndex(const FamilyMemberNode* child) const
     return -1;
 }
 
-void FamilyTree::getPersonsFromFile(const string& filename)
-{
-    ifstream infile(filename);
-    if (!infile.is_open())
-    {
-        return;
-    }
-    string line;
-    string delimiter;
-    int count;
-    infile >> count;
-    memberCount = count;
+void FamilyTree::getPersonsFromFile(const string &filename, Person (&persons)[100]) {
+  ifstream infile(filename);
+  if (!infile.is_open())
+  {
+    return;
+  }
+  string line;
+  string delimiter;
+  int count;
+  infile >> count;
+  memberCount = count;
+  std::getline(infile, line);
+  for (int i = 0; i < count; ++i)
+  {
     std::getline(infile, line);
-    for (int i = 0; i < count; ++i)
+    vector<string> list = split(line, ", ");
+    persons[i].id = stoi(list[0]);
+    persons[i].name = list[1];
+    persons[i].birth = Date(stoi(list[2]), stoi(list[3]), stoi(list[4]));
+    persons[i].marriage = stoi(list[5]);
+    persons[i].address = list[6];
+    persons[i].alive = stoi(list[7]);
+    if (!persons[i].alive)
     {
-        std::getline(infile, line);
-        vector<string> list = split(line, ", ");
-        persons[i].id = stoi(list[0]);
-        persons[i].name = list[1];
-        persons[i].birth = Date(stoi(list[2]), stoi(list[3]), stoi(list[4]));
-        persons[i].marriage = stoi(list[5]);
-        persons[i].address = list[6];
-        persons[i].alive = stoi(list[7]);
-        if (!persons[i].alive)
-        {
-            persons[i].death = Date(stoi(list[8]), stoi(list[9]), stoi(list[10]));
-        }
+      persons[i].death = Date(stoi(list[8]), stoi(list[9]), stoi(list[10]));
     }
+  }
 }
 
-void FamilyTree::getTreeFromFile(const string& filename)
+void FamilyTree::getTreeFromFile(const string& filename, Person (&persons)[MAX])
 {
     ifstream infile(filename);
     if (!infile.is_open())
@@ -222,7 +213,7 @@ void FamilyTree::getTreeFromFile(const string& filename)
         }
         parents.push_back(stoi(list[i]));
     }
-    root = createTree(parents, 0);
+    root = createTree(persons, parents, 0);
 }
 
 void FamilyTree::exportToPersonFile(const string& filename)
@@ -236,20 +227,20 @@ void FamilyTree::exportToPersonFile(const string& filename)
     personsOut << memberCount << "\n";
     for (int i = 0; i < memberCount; ++i)
     {
-        personsOut << persons[i].id << ", ";
-        personsOut << persons[i].name << ", ";
-        personsOut << persons[i].birth.year << ", ";
-        personsOut << persons[i].birth.month << ", ";
-        personsOut << persons[i].birth.day << ", ";
-        personsOut << persons[i].marriage << ", ";
-        personsOut << persons[i].address << ", ";
-        personsOut << persons[i].alive;
-        if (!persons[i].alive)
+        Person presentPerson = node(i, root)->person;
+        personsOut << presentPerson.id << ", ";
+        personsOut << presentPerson.name << ", ";
+        personsOut << presentPerson.birth.year << ", ";
+        personsOut << presentPerson.birth.month << ", ";
+        personsOut << presentPerson.birth.day << ", ";
+        personsOut << presentPerson.address << ", ";
+        personsOut << presentPerson.alive;
+        if (!presentPerson.alive)
         {
             personsOut << ", ";
-            personsOut << persons[i].death.year << ", ";
-            personsOut << persons[i].death.month << ", ";
-            personsOut << persons[i].death.day;
+            personsOut << presentPerson.death.year << ", ";
+            personsOut << presentPerson.death.month << ", ";
+            personsOut << presentPerson.death.day;
         }
         personsOut << "\n";
     }
@@ -401,8 +392,9 @@ void FamilyTree::update(string name) {
 }
 
 void FamilyTree::importFromFile(string personFile, string caseFile) {
-  getPersonsFromFile(personFile);
-  getTreeFromFile(caseFile);
+  Person persons[MAX];
+  getPersonsFromFile(personFile, persons);
+  getTreeFromFile(caseFile, persons);
 }
 
 void FamilyTree::exportToFile(const string &personFile, const string &caseFile) {
