@@ -280,6 +280,41 @@ void FamilyTree::describeGeneration(int n) {
 void FamilyTree::query(string name) {
 }
 void FamilyTree::relationship(string name1, string name2) {
+  FamilyMemberNode* p1 = Find(name1);
+  FamilyMemberNode* p2 = Find(name2);
+  if (p1 && p2)
+  {
+    int NG1 = GetNumOfGeneration(p1);
+    int NG2 = GetNumOfGeneration(p2);
+    if (NG1 == NG2)
+      if (Parent(p1) == Parent(p2))
+        cout << name1 << "是" << name2 << "的亲兄弟" << endl;
+      else
+        cout << name1 << "是" << name2 << "的堂兄弟" << endl;
+    else if (NG2 > NG1)
+      if (NG2 - NG1 == 1)
+      {
+        if (p1 == Parent(p2))
+          cout << name1 << "是" << name2 << "的爸爸" << endl;
+        else
+          cout << name1 << "是" << name2 << "的叔叔" << endl;
+      }
+      else
+        cout << name1 << "是" << name2 << "的爷爷" << endl;
+    else if (NG2 < NG1)
+      if (NG1 - NG2 == 1)
+        if (p2 == Parent(p1))
+          cout << name2 << "是" << name1 << "的爸爸" << endl;
+        else
+          cout << name2 << "是" << name1 << "的叔叔" << endl;
+      else
+        cout << name2 << "是" << name1 << "的爷爷" << endl;
+  }
+  else
+  if (!p1)
+    cout << name1 << " 不在家族信息中！！" << endl;
+  if(!p2)
+    cout << name2 << " 不在家族信息中！！" << endl;
 }
 void FamilyTree::addChild(string name) {
 }
