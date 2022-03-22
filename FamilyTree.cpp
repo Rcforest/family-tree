@@ -524,7 +524,7 @@ void FamilyTree::ShowInfoOfGenNum(const int& n)
                 q.push(p);
         }
         cout << endl;
-        cout << "绗?" << n << "浠ｅ叡鏈?" << genNum << "浜?" << endl;
+        cout << "第" << n << "代共有" << genNum << "人" << endl;
     }
 }
 
