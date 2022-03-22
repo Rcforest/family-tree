@@ -384,7 +384,7 @@ void FamilyTree::remove(string name) {
       person = NULL;
     } else {
       FamilyMemberNode *p1 = p->firstChild;
-      while (p1->nextSibling != p) {
+      while (p1->nextSibling != person) {
         p1 = p1->nextSibling;
       }
       p1->nextSibling = person->nextSibling;
