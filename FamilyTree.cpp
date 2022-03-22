@@ -194,7 +194,8 @@ void FamilyTree::getTreeFromFile(const string &filename, Person (&persons)[MAX])
   vector<string> parentList = split(line, ", ");
   vector<int> personsIndex;
   int root_index;
-  for (int i = 0; i < memberCount; ++i) {
+  int count = memberCount + size(repeatedIndex);
+  for (int i = 0; i < count; ++i) {
     if (std::find(repeatedIndex.begin(), repeatedIndex.end(), i) != repeatedIndex.end()) {
       cout << i << endl;
       continue;
