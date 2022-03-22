@@ -87,26 +87,31 @@ FamilyMemberNode* FamilyTree::Find(FamilyMemberNode* r, const string& Name) cons
     }
 }
 
-FamilyMemberNode* FamilyTree::createTree(Person (&persons)[MAX], vector<int> parents, int root_)
-{
-    int index = persons_id[root_];
-    FamilyMemberNode* r = new FamilyMemberNode(persons[index]);
-    FamilyMemberNode* subTreeRoot, * cur=NULL;
-    for (int i = 0; i < memberCount; ++i) {
-        if (parents[i] == root_) {
-            subTreeRoot = createTree(persons, parents, i);
-            if (r->firstChild == nullptr) {
-                r->firstChild = subTreeRoot;
-                cur = subTreeRoot;
-            }
-            else {
-                cur->nextSibling = subTreeRoot;
-                cur = subTreeRoot;
-            }
-        }
+FamilyMemberNode *FamilyTree::createTree(Person (&persons)[100],
+                                         vector<int> personsList,
+                                         vector<int> parents,
+                                         int root_) {
+  FamilyMemberNode *r;
+  for (Person person:persons) {
+    if (root_ == person.id - 1) {
+      r = new FamilyMemberNode(person);
+      break;
     }
-
-    return r;
+  }
+  FamilyMemberNode *subTreeRoot, *cur;
+  for (int i = 0; i < memberCount; ++i) {
+    if (parents[i] == root_) {
+      subTreeRoot = createTree(persons, personsList, parents, personsList[i]);
+      if (r->firstChild == nullptr) {
+        r->firstChild = subTreeRoot;
+        cur = subTreeRoot;
+      } else {
+        cur->nextSibling = subTreeRoot;
+        cur = subTreeRoot;
+      }
+    }
+  }
+  return r;
 }
 
 FamilyMemberNode* FamilyTree::parent(FamilyMemberNode* root_, const FamilyMemberNode* child) const
@@ -136,19 +141,7 @@ FamilyMemberNode* FamilyTree::node(int id, FamilyMemberNode* root_)
     return nullptr;
 }
 
-int FamilyTree::parentIndex(const FamilyMemberNode* child) const
-{
-    if (child == root) {
-        return -1;
-    }
-    int id = parent(root, child)->id();
-    for (int i = 0; i < memberCount; ++i) {
-        if (persons_id[i] == id) return i;
-    }
-    return -1;
-}
-
-void FamilyTree::getPersonsFromFile(const string &filename, Person (&persons)[100]) {
+void FamilyTree::getPersonsFromFile(const string &filename, Person (&persons)[MAX]) {
   ifstream infile(filename);
   if (!infile.is_open())
   {
@@ -177,77 +170,59 @@ void FamilyTree::getPersonsFromFile(const string &filename, Person (&persons)[10
   }
 }
 
-void FamilyTree::getTreeFromFile(const string& filename, Person (&persons)[MAX])
-{
-    ifstream infile(filename);
-    if (!infile.is_open())
-    {
-        return;
+void FamilyTree::getTreeFromFile(const string &filename, Person (&persons)[MAX]) {
+
+  ifstream infile(filename);
+  if (!infile.is_open()) {
+    return;
+  }
+  vector<int> parents;
+  vector<int> repeatedIndex;
+  string line;
+  std::getline(infile, line);
+  vector<string> personList = split(line, ", ");
+  int n = memberCount;
+  for (int i = 0; i < n; ++i) {
+    if (persons[stoi(personList[i])].recorded) {
+      memberCount--;
+      repeatedIndex.push_back(i);
+      continue;
     }
-    vector<int> parents;
-    vector<int> repeatedIndex;
-    string line;
-    std::getline(infile, line);
-    vector<string> list = split(line, ", ");
-    int n = memberCount, count = 0;
-    for (int i = 0; i < n; ++i)
-    {
-        if (persons[stoi(list[i])].recorded)
-        {
-            memberCount--;
-            repeatedIndex.push_back(i);
-            continue;
-        }
-        persons_id[count] = stoi(list[i]);
-        persons[stoi(list[i])].recorded = true;
-        count++;
+    persons[stoi(personList[i])].recorded = true;
+  }
+  std::getline(infile, line);
+  vector<string> parentList = split(line, ", ");
+  vector<int> personsIndex;
+  int root_index;
+  for (int i = 0; i < memberCount; ++i) {
+    if (std::find(repeatedIndex.begin(), repeatedIndex.end(), i) != repeatedIndex.end()) {
+      cout << i << endl;
+      continue;
     }
-    std::getline(infile, line);
-    list = split(line, ", ");
-    for (int i = 0; i < memberCount; ++i)
-    {
-        if (std::find(repeatedIndex.begin(), repeatedIndex.end(), i) != repeatedIndex.end())
-        {
-            cout << i << endl;
-            continue;
-        }
-        parents.push_back(stoi(list[i]));
+    if (stoi(parentList[i]) == -1) {
+      root_index = stoi(personList[i]);
     }
-    root = createTree(persons, parents, 0);
+    personsIndex.push_back(stoi(personList[i]));
+    parents.push_back(stoi(parentList[i]));
+  }
+  root = createTree(persons, personsIndex, parents, root_index);
 }
 
-void FamilyTree::exportToPersonFile(const string& filename)
+void FamilyTree::exportToPersonFile(const string &filename)
 {
     ofstream personsOut;
     personsOut.open(filename);
     if (!personsOut)
     {
+        cout << "personOut file open error";
         return;
     }
     personsOut << memberCount << "\n";
-    for (int i = 0; i < memberCount; ++i)
-    {
-        Person presentPerson = node(i, root)->person;
-        personsOut << presentPerson.id << ", ";
-        personsOut << presentPerson.name << ", ";
-        personsOut << presentPerson.birth.year << ", ";
-        personsOut << presentPerson.birth.month << ", ";
-        personsOut << presentPerson.birth.day << ", ";
-        personsOut << presentPerson.address << ", ";
-        personsOut << presentPerson.alive;
-        if (!presentPerson.alive)
-        {
-            personsOut << ", ";
-            personsOut << presentPerson.death.year << ", ";
-            personsOut << presentPerson.death.month << ", ";
-            personsOut << presentPerson.death.day;
-        }
-        personsOut << "\n";
-    }
+    outputPersonInfo(root, personsOut);
     personsOut.close();
 }
 
-void FamilyTree::exportToCaseFile(const string& filename)
+void FamilyTree::exportToCaseFile(const string &filename)
 {
     ofstream caseOut;
     caseOut.open(filename);
@@ -262,28 +237,14 @@ void FamilyTree::exportToCaseFile(const string& filename)
 
 void FamilyTree::exportPersonIndex(ofstream& file)
 {
-    for (int i = 0; i < memberCount; ++i)
-    {
-        file << persons_id[i];
-        if (i == memberCount - 1)
-            file << endl;
-        else
-            file << ", ";
-    }
+  int count = 0;
+  outputPersonIndex(root, file, count);
 }
 
 void FamilyTree::exportParentIndex(ofstream& file)
 {
-    for (int i = 0; i < memberCount; ++i)
-    {
-        FamilyMemberNode* presentNode = node(persons_id[i], root);
-        int parent_index = parentIndex(presentNode);
-        file << parent_index;
-        if (i == memberCount - 1)
-            file << endl;
-        else
-            file << ", ";
-    }
+  int count = 0;
+  outputParentIndex(root, file, count);
 }
 
 void FamilyTree::GetNumOfGeneration(FamilyMemberNode *r, const FamilyMemberNode *p,int level, int &result) const 
@@ -332,6 +293,7 @@ void FamilyTree::remove(string name) {
     FamilyMemberNode *p = parent(root, person);
     if (p->firstChild == person) {
       p->firstChild = person->nextSibling;
+      memberCount -= nodeCount(person);
       delete person;
       person = NULL;
     } else {
@@ -340,6 +302,7 @@ void FamilyTree::remove(string name) {
         p1 = p1->nextSibling;
       }
       p1->nextSibling = person->nextSibling;
+      memberCount -= nodeCount(person);
       delete person;
       person = NULL;
     }
@@ -496,6 +459,82 @@ FamilyTree& FamilyTree::operator=(const FamilyTree& copy)
         root = CopyTree(copy.root);
     }
     return (*this);
+}
+
+void FamilyTree::outputPersonInfo(FamilyMemberNode *root_, ofstream &personsOut) {
+  FamilyMemberNode *p;
+  if (root_ == nullptr) {
+    return;
+  }
+  Person presentPerson = root_->person;
+  personsOut << presentPerson.id << ", ";
+  personsOut << presentPerson.name << ", ";
+  personsOut << presentPerson.birth.year << ", ";
+  personsOut << presentPerson.birth.month << ", ";
+  personsOut << presentPerson.birth.day << ", ";
+  personsOut << presentPerson.marriage << ", ";
+  personsOut << presentPerson.address << ", ";
+  personsOut << presentPerson.alive;
+  if (!presentPerson.alive) {
+    personsOut << ", ";
+    personsOut << presentPerson.death.year << ", ";
+    personsOut << presentPerson.death.month << ", ";
+    personsOut << presentPerson.death.day;
+  }
+  personsOut << "\n";
+  for (p = FirstChild(root_); p != nullptr; p = NextSibling(p))
+    outputPersonInfo(p, personsOut);
+}
+
+void FamilyTree::outputPersonIndex(FamilyMemberNode *root_, ofstream &file, int &count) {
+  if (root_ == nullptr) {
+    return;
+  }
+  file << root_->id() - 1;
+  count ++;
+  if (count == memberCount) {
+    file << endl;
+  } else {
+    file << ", ";
+  }
+  FamilyMemberNode *p;
+  for (p = FirstChild(root_); p != nullptr; p = NextSibling(p))
+    outputPersonIndex(p, file, count);
+}
+
+void FamilyTree::outputParentIndex(FamilyMemberNode *root_, ofstream &file, int &count) {
+  if (root_ == nullptr) {
+    return;
+  }
+  int parent_index;
+  if (root_ == root) {
+    parent_index = -1;
+  } else {
+    parent_index = Parent(root_)->id() - 1;
+  }
+  file << parent_index;
+  count ++;
+  if (count == memberCount) {
+    file << endl;
+  } else {
+    file << ", ";
+  }
+  FamilyMemberNode *p;
+  for (p = FirstChild(root_); p != nullptr ; p = p->nextSibling) {
+    outputParentIndex(p, file, count);
+  }
+}
+
+int FamilyTree::nodeCount(FamilyMemberNode *r) {
+  FamilyMemberNode *p;
+  if (r == nullptr) {
+    return 0;
+  }
+  int subTreeNodeCountSum = 0;
+  for (p = FirstChild(r); p != nullptr; p = NextSibling(p))
+    subTreeNodeCountSum += nodeCount(p);
+  return 1 + subTreeNodeCountSum;
+
 }
 
 vector<string> split(string phrase, string delimiter)

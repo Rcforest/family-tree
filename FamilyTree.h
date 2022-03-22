@@ -20,19 +20,23 @@ class FamilyTree {
 protected:
 
 	FamilyMemberNode* root;
-	int persons_id[MAX];
 	int memberCount;
 	//assitant func
 
 	/* editor hhl*/
-	FamilyMemberNode* createTree(Person (&persons)[MAX], vector<int> parents, int root_);
+    FamilyMemberNode *createTree(Person (&persons)[100],
+                                 vector<int> personsList,
+                                 vector<int> parents,
+                                 int root_);
 	FamilyMemberNode* parent(FamilyMemberNode* root_, const FamilyMemberNode* child) const;
 	FamilyMemberNode* node(int id, FamilyMemberNode* root_);
-	int parentIndex(const FamilyMemberNode* child) const;
 	void getPersonsFromFile(const string& filename, Person (&persons)[MAX]);
 	void getTreeFromFile(const string& filename, Person (&persons)[MAX]);
-	void exportToPersonFile(const string& filename);
-	void exportToCaseFile(const string& filename);
+    void outputPersonInfo(FamilyMemberNode *root_, ofstream &personsOut);
+    void outputPersonIndex(FamilyMemberNode *root_, ofstream &file, int &count);
+    void outputParentIndex(FamilyMemberNode *root_, ofstream &file, int &count);
+	void exportToPersonFile(const string &filename);
+	void exportToCaseFile(const string &filename);
 	void exportPersonIndex(ofstream& file);
 	void exportParentIndex(ofstream& file);
 	void displayWithConcaveShape(FamilyMemberNode* root_, int level);
@@ -42,6 +46,7 @@ protected:
 	FamilyMemberNode* CopyTree(FamilyMemberNode* r);
 	FamilyMemberNode* Find(FamilyMemberNode* r, const string& Name) const;
 	void GetNumOfGeneration(FamilyMemberNode* r, const FamilyMemberNode* p,int level, int& result) const;
+    int nodeCount(FamilyMemberNode* r);
 	/**************/
 public:
 	FamilyTree();
