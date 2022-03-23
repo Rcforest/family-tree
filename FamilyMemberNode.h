@@ -19,6 +19,13 @@ struct Date {
 	Date(int y, int m, int d);
 
 	Date& operator=(const Date& t);
+	bool operator>=(const Date& t) const;
+	bool operator<=(const Date& t) const;
+	bool operator>(const Date& t) const;
+	bool operator<(const Date& t) const;
+	bool operator==(const Date& t) const;
+	bool operator!=(const Date& t) const;
+
 	ostream& OutputDate(ostream& out) const;
 
 	friend class Person;

@@ -31,6 +31,48 @@ Date& Date::operator=(const Date& t)
 	return (*this);
 }
 
+bool Date::operator>=(const Date& t) const
+{
+	if (year < t.year)
+		return false;
+	if (month < t.month)
+		return false;
+	if (day < t.day)
+		return false;
+	return true;
+}
+bool Date::operator<=(const Date& t) const
+{
+	if (year > t.year)
+		return false;
+	if (month > t.month)
+		return false;
+	if (day > t.day)
+		return false;
+	return true;
+}
+bool Date::operator>(const Date& t) const
+{
+	return !operator<=(t);
+}
+bool Date::operator<(const Date& t) const
+{
+	return !operator>=(t);
+}
+
+bool Date::operator==(const Date& t) const
+{
+	if (year == t.year && month == t.month && day == t.day)
+	{
+		return true;
+	}
+	return false;
+}
+bool Date::operator!=(const Date& t) const
+{
+	return !operator==(t);
+}
+
 ostream& Date::OutputDate(ostream& out) const
 {
 	out << year << "年" << month << "月" << day << "日";
