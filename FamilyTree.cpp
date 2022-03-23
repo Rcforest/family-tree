@@ -35,18 +35,18 @@ void FamilyTree::Destroy(FamilyMemberNode*& r)
 
 FamilyMemberNode* FamilyTree::Parent(FamilyMemberNode* r, const FamilyMemberNode* cur) const
 {
-    if (r == NULL) return NULL;				// ç©ºäºŒå‰æ ‘
+    if (r == NULL) return NULL;				// ç»Œè½°ç°©é™å¤‹çˆ²
 
-    FamilyMemberNode *p;        // º¢×Ó
+    FamilyMemberNode *p;        // å­©å­
     for (p = FirstChild(r); p != NULL; p = NextSibling(p))
-        if (p == cur) return r;                // curÊÇrµÄº¢×Ó
+        if (p == cur) return r;                // curæ˜¯rçš„å­©å­
 
     for (p = FirstChild(r); p != NULL; p = NextSibling(p)) {
         FamilyMemberNode *q;
-        q = Parent(p, cur);                    // ÔÚ×ÓÊ÷ÉÏÇócurµÄË«Ç×
-        if (q != NULL) return q;            // Ë«Ç×ÔÚ×ÓÊ÷ÉÏ
+        q = Parent(p, cur);                    // åœ¨å­æ ‘ä¸Šæ±‚curçš„åŒäº²
+        if (q != NULL) return q;            // åŒäº²åœ¨å­æ ‘ä¸Š
     }
-    return NULL;                            // Î´ÕÒµ½Ë«Ç×
+    return NULL;                            // æœªæ‰¾åˆ°åŒäº²
 }
 
 FamilyMemberNode* FamilyTree::CopyTree(FamilyMemberNode* r)
@@ -289,42 +289,42 @@ void FamilyTree::relationship(string name1, string name2) {
     int NG2 = GetNumOfGeneration(p2);
     if (NG1 == NG2)
       if (Parent(p1) == Parent(p2))
-        cout << name1 << "ÊÇ" << name2 << "µÄÇ×ĞÖµÜ" << endl;
+        cout << name1 << "æ˜¯" << name2 << "çš„äº²å…„å¼Ÿ" << endl;
       else
-        cout << name1 << "ÊÇ" << name2 << "µÄÌÃĞÖµÜ" << endl;
+        cout << name1 << "æ˜¯" << name2 << "çš„å ‚å…„å¼Ÿ" << endl;
     else if (NG2 > NG1)
       if (NG2 - NG1 == 1)
       {
         if (p1 == Parent(p2))
-          cout << name1 << "ÊÇ" << name2 << "µÄ°Ö°Ö" << endl;
+          cout << name1 << "æ˜¯" << name2 << "çš„çˆ¸çˆ¸" << endl;
         else
-          cout << name1 << "ÊÇ" << name2 << "µÄÊåÊå" << endl;
+          cout << name1 << "æ˜¯" << name2 << "çš„å”å”" << endl;
       }
       else
-        cout << name1 << "ÊÇ" << name2 << "µÄÒ¯Ò¯" << endl;
+        cout << name1 << "æ˜¯" << name2 << "çš„çˆ·çˆ·" << endl;
     else if (NG2 < NG1)
       if (NG1 - NG2 == 1)
         if (p2 == Parent(p1))
-          cout << name2 << "ÊÇ" << name1 << "µÄ°Ö°Ö" << endl;
+          cout << name2 << "æ˜¯" << name1 << "çš„çˆ¸çˆ¸" << endl;
         else
-          cout << name2 << "ÊÇ" << name1 << "µÄÊåÊå" << endl;
+          cout << name2 << "æ˜¯" << name1 << "çš„å”å”" << endl;
       else
-        cout << name2 << "ÊÇ" << name1 << "µÄÒ¯Ò¯" << endl;
+        cout << name2 << "æ˜¯" << name1 << "çš„çˆ·çˆ·" << endl;
   }
   else
   if (!p1)
-    cout << name1 << " ²»ÔÚ¼Ò×åĞÅÏ¢ÖĞ£¡£¡" << endl;
+    cout << name1 << " ä¸åœ¨å®¶æ—ä¿¡æ¯ä¸­ï¼ï¼" << endl;
   if(!p2)
-    cout << name2 << " ²»ÔÚ¼Ò×åĞÅÏ¢ÖĞ£¡£¡" << endl;
+    cout << name2 << " ä¸åœ¨å®¶æ—ä¿¡æ¯ä¸­ï¼ï¼" << endl;
 }
 void FamilyTree::addChild(string name) {
   FamilyMemberNode *p = Find(name);
   if (!p) {
-    cout << name << "²»ÔÚ¼Ò×åĞÅÏ¢ÖĞ£¡£¡" << endl;
+    cout << name << "ä¸åœ¨å®¶æ—ä¿¡æ¯ä¸­ï¼ï¼" << endl;
     return;
   }
   int num = 0, i = 0;
-  cout << "Ìí¼Óº¢×Ó¸öÊı£º";
+  cout << "æ·»åŠ å­©å­ä¸ªæ•°ï¼š";
   cin >> num;
   Person children[num];
   int flag = 1;
@@ -332,20 +332,20 @@ void FamilyTree::addChild(string name) {
   while (num--) {
     int id = memberCount++;
     children[i].id = id;
-    cout << "ÇëÊäÈëĞÕÃû£º" << endl;
+    cout << "è¯·è¾“å…¥å§“åï¼š" << endl;
     cin >> children[i].name;
-    cout << "³öÉúÈÕÆÚ£º(eg:0000 00 00)" << endl;
+    cout << "å‡ºç”Ÿæ—¥æœŸï¼š(eg:0000 00 00)" << endl;
     int y, m, d;
     cin >> y >> m >> d;
     children[i].birth = Date(y, m, d);
-    cout << "ÊÇ·ñ»éÒö£º0/1" << endl;
+    cout << "æ˜¯å¦å©šå§»ï¼š0/1" << endl;
     cin >> children[i].marriage;
-    cout << "×¡Ö·£º" << endl;
+    cout << "ä½å€ï¼š" << endl;
     cin >> children[i].address;
-    cout << "ÊÇ·ñÔÚÊÀ£º0/1" << endl;
+    cout << "æ˜¯å¦åœ¨ä¸–ï¼š0/1" << endl;
     cin >> children[i].alive;
     if (!children[i].alive) {
-      cout << "È¥ÊÀÈÕÆÚ£º(eg:0000 00 00)" << endl;
+      cout << "å»ä¸–æ—¥æœŸï¼š(eg:0000 00 00)" << endl;
       cin >> y >> m >> d;
       children[i].death = Date(y, m, d);
     }
@@ -372,7 +372,7 @@ void FamilyTree::addChild(string name) {
 void FamilyTree::remove(string name) {
   FamilyMemberNode *person = Find(root, name);
   if (person == NULL) {
-    cout << "ÊäÈëĞÅÏ¢ÓĞÎó!" << endl;
+    cout << "è¾“å…¥ä¿¡æ¯æœ‰è¯¯!" << endl;
     return;
   }
   if (parent(root, person) != NULL) {
@@ -393,31 +393,31 @@ void FamilyTree::remove(string name) {
       person = NULL;
     }
   } else {
-    cout << "µÚÒ»´úÈËÎŞ·¨É¾³ı!" << endl;
+    cout << "ç¬¬ä¸€ä»£äººæ— æ³•åˆ é™¤!" << endl;
   }
 }
 void FamilyTree::update(string name) {
   FamilyMemberNode *person = NULL;
   person = Find(root, name);
   if (person == NULL) {
-    cout << "ÊäÈëĞÅÏ¢ÓĞÎó!" << endl;
+    cout << "è¾“å…¥ä¿¡æ¯æœ‰è¯¯!" << endl;
     return;
   }
-  cout << "Çë°´ÏÂÁĞÖ¸ÒıĞŞ¸ÄĞÅÏ¢£¡" << endl;
-  cout << "ÇëÊäÈëĞÕÃû:" << endl;
+  cout << "è¯·æŒ‰ä¸‹åˆ—æŒ‡å¼•ä¿®æ”¹ä¿¡æ¯ï¼" << endl;
+  cout << "è¯·è¾“å…¥å§“å:" << endl;
   cin >> person->person.name;
   cin.ignore();
-  cout << "ÇëÊäÈëÉúÈÕ(Äê,ÔÂ,ÈÕ):" << endl;
+  cout << "è¯·è¾“å…¥ç”Ÿæ—¥(å¹´,æœˆ,æ—¥):" << endl;
   cin >> person->person.birth.year;
   cin.ignore();
   cin >> person->person.birth.month;
   cin.ignore();
   cin >> person->person.birth.day;
   cin.ignore();
-  cout << "ÇëÊäÈëµØÖ·" << endl;
+  cout << "è¯·è¾“å…¥åœ°å€" << endl;
   cin >> person->person.address;
   int IsMarried;
-  cout << "ÇëÊäÈë»éÒö×´¿ö,ÒÑ»éÊä1£¬Î´»éÊä0" << endl;
+  cout << "è¯·è¾“å…¥å©šå§»çŠ¶å†µ,å·²å©šè¾“1ï¼Œæœªå©šè¾“0" << endl;
   cin >> IsMarried;
   cin.ignore();
   int word = 1;
@@ -429,12 +429,12 @@ void FamilyTree::update(string name) {
       person->person.marriage = 0;
       word = 0;
     } else {
-      cout << "ÊäÈëÊı¾İ·Ç·¨,ÇëÖØĞÂÊäÈë" << endl;
+      cout << "è¾“å…¥æ•°æ®éæ³•,è¯·é‡æ–°è¾“å…¥" << endl;
       cin >> IsMarried;
     }
   }
   word = 1;
-  cout << "¸ÃÈËÊÇ·ñÔÚÊÀ£¬ÔÚÊÀÊä1£¬ÒÑÈ¥ÊÀÊä0" << endl;
+  cout << "è¯¥äººæ˜¯å¦åœ¨ä¸–ï¼Œåœ¨ä¸–è¾“1ï¼Œå·²å»ä¸–è¾“0" << endl;
   int alive;
   cin >> alive;
   cin.ignore();
@@ -479,22 +479,22 @@ FamilyMemberNode *FamilyTree::Find(string Name) const {
 void FamilyTree::ShowInfoOf(string Name) const {
     FamilyMemberNode *p = Find(Name);
     if (p == NULL) {
-      cout << "²éÎŞ´ËÈË" << endl;
+      cout << "æŸ¥æ— æ­¤äºº" << endl;
       return;
     }
-    cout << "±»²éÑ¯ÕßĞÅÏ¢£º" << endl;
+    cout << "è¢«æŸ¥è¯¢è€…ä¿¡æ¯ï¼š" << endl;
     cout << p->person << endl;
-    cout << "ÊÇ¼ÒÖĞµÚ" << GetNumOfGeneration(p) << "´ú³ÉÔ±" << endl;
-    cout << "Æä¸¸Ç×ĞÅÏ¢£º" << endl;
+    cout << "æ˜¯å®¶ä¸­ç¬¬" << GetNumOfGeneration(p) << "ä»£æˆå‘˜" << endl;
+    cout << "å…¶çˆ¶äº²ä¿¡æ¯ï¼š" << endl;
     FamilyMemberNode *q = Parent(p);
     if (q != NULL)
         cout << q->person << endl;
     else
         cout << "None" << endl;
-    cout << "Æäº¢×ÓĞÅÏ¢£º" << endl;
+    cout << "å…¶å­©å­ä¿¡æ¯ï¼š" << endl;
     int i = 1;
     for (FamilyMemberNode *t = FirstChild(p); t != NULL; t = NextSibling(t)) {
-      cout << "--µÚ" << i << "¸öº¢×Ó£º--" << endl;
+      cout << "--ç¬¬" << i << "ä¸ªå­©å­ï¼š--" << endl;
       cout << t->person << endl;
       i++;
     }
@@ -525,7 +525,7 @@ void FamilyTree::ShowInfoOfGenNum(const int& n)
                 q.push(p);
         }
         cout << endl;
-        cout << "µÚ" << n << "´ú¹²ÓĞ" << genNum << "ÈË" << endl;
+        cout << "ç¬¬" << n << "ä»£å…±æœ‰" << genNum << "äºº" << endl;
     }
 }
 
@@ -534,7 +534,7 @@ int FamilyTree::GetNumOfGeneration(FamilyMemberNode *p) const {
     GetNumOfGeneration(root, p, NumGeneration,NumGeneration);
     if (NumGeneration > 0)
         return NumGeneration;
-    cerr << "Î´ÕÒµ½¸Ã½Úµã" << endl;
+    cerr << "æœªæ‰¾åˆ°è¯¥èŠ‚ç‚¹" << endl;
 }
 
 FamilyTree& FamilyTree::operator=(const FamilyTree& copy)
