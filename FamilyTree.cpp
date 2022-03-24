@@ -397,47 +397,38 @@ void FamilyTree::remove(string name) {
   }
 }
 void FamilyTree::update(string name) {
-  FamilyMemberNode *person = NULL;
-  person = Find(root, name);
-  if (person == NULL) {
+  FamilyMemberNode *personNode = Find(name);
+  Person presentPerson =  personNode->person;
+  if (personNode == NULL) {
     cout << "输入信息有误!" << endl;
     return;
   }
   cout << "请按下列指引修改信息！" << endl;
   cout << "请输入姓名:" << endl;
-  cin >> person->person.name;
+  cin >> presentPerson.name;
   cin.ignore();
-  cout << "请输入生日(年,月,日):" << endl;
-  cin >> person->person.birth.year;
+  cout << "请输入生日(年 月 日):" << endl;
+  cin >> presentPerson.birth.year;
   cin.ignore();
-  cin >> person->person.birth.month;
+  cin >> presentPerson.birth.month;
   cin.ignore();
-  cin >> person->person.birth.day;
+  cin >> presentPerson.birth.day;
   cin.ignore();
   cout << "请输入地址" << endl;
-  cin >> person->person.address;
+  cin >> presentPerson.address;
   int IsMarried;
   cout << "请输入婚姻状况,已婚输1，未婚输0" << endl;
-  cin >> IsMarried;
+  cin >> presentPerson.marriage;
   cin.ignore();
-  int word = 1;
-  while (word) {
-    if (IsMarried == 1) {
-      person->person.marriage = 1;
-      word = 0;
-    } else if (IsMarried == 0) {
-      person->person.marriage = 0;
-      word = 0;
-    } else {
-      cout << "输入数据非法,请重新输入" << endl;
-      cin >> IsMarried;
-    }
-  }
-  word = 1;
   cout << "该人是否在世，在世输1，已去世输0" << endl;
-  int alive;
-  cin >> alive;
+  cin >> presentPerson.alive;
   cin.ignore();
+  if (!presentPerson.alive) {
+    cout << "输入去世日期(年 月 日)" << endl;
+    cin >> presentPerson.death.year;
+    cin >> presentPerson.death.month;
+    cin >> presentPerson.death.day;
+  }
 }
 
 void FamilyTree::importFromFile(string personFile, string caseFile) {
