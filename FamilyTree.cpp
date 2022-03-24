@@ -502,31 +502,42 @@ void FamilyTree::ShowInfoOf(string Name) const {
 
 void FamilyTree::ShowInfoOfGenNum(const int& n)
 {
-    if (n <= 0)
-        cerr << "Invalid input of the num of generation." << endl;
-    else if (root == NULL)
-        return;
-    else
-    {
-        int genNum = 0;
-        queue<FamilyMemberNode*> q;
-        FamilyMemberNode* cur, * p;
-        q.push(root);
-        while (!q.empty())
-        {
-            cur = q.front();
-            q.pop();
-            if (GetNumOfGeneration(cur) == n)
-            {
-                cout << cur->person.name << '\t';
-                genNum++;
-            }
-            for (p = FirstChild(cur); p != NULL; p = NextSibling(p))
-                q.push(p);
-        }
-        cout << endl;
-        cout << "第" << n << "代共有" << genNum << "人" << endl;
-    }
+	if(root == NULL)
+	{
+		cout << "家谱树为空" << endl;
+		return;
+	}
+	queue<FamilyMemberNode*> NodesQue;
+	int height = 1;
+	NodesQue.push(root);
+	while (!NodesQue.empty())
+	{
+		if (n == height)
+			break;
+		int len = NodesQue.size();
+		for (int i = 0; i < len; i++)
+		{
+			FamilyMemberNode* p = NodesQue.front();
+			NodesQue.pop();
+			if (FirstChild(p) != NULL)
+				for (FamilyMemberNode* q = FirstChild(p);q != NULL ; q = NextSibling(q))
+					NodesQue.push(q);
+		}
+		height++;
+	}
+	if ( n!= height)
+		cout << "不存在第" << n << "代人" << endl;
+	else
+	{
+		cout << "第" << n << "代共有" << NodesQue.size() << "人" << endl;
+		while (!NodesQue.empty())
+		{
+			FamilyMemberNode* p = NodesQue.front();
+			NodesQue.pop();
+			cout << p->person.name << '\t';
+		}
+		cout << endl;
+	}
 }
 
 int FamilyTree::GetNumOfGeneration(FamilyMemberNode *p) const {
