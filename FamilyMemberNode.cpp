@@ -23,33 +23,15 @@ Date::Date(int y, int m, int d) {
 }
 
 Date& Date::operator=(const Date& t)
-{
-	year = t.year;
-	month = t.month;
-	day = t.day;
-
-	return (*this);
-}
+= default;
 
 bool Date::operator>=(const Date& t) const
 {
-	if (year < t.year)
-		return false;
-	if (month < t.month)
-		return false;
-	if (day < t.day)
-		return false;
-	return true;
+  return (year >= t.year && month >= t.month && day >= t.day);
 }
 bool Date::operator<=(const Date& t) const
 {
-	if (year > t.year)
-		return false;
-	if (month > t.month)
-		return false;
-	if (day > t.day)
-		return false;
-	return true;
+  return (year <= t.year && month <= t.month && day <= t.day);
 }
 bool Date::operator>(const Date& t) const
 {
@@ -62,11 +44,7 @@ bool Date::operator<(const Date& t) const
 
 bool Date::operator==(const Date& t) const
 {
-	if (year == t.year && month == t.month && day == t.day)
-	{
-		return true;
-	}
-	return false;
+  return (year == t.year && month == t.month && day == t.day);
 }
 bool Date::operator!=(const Date& t) const
 {
