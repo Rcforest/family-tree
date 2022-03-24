@@ -101,7 +101,12 @@ FamilyMemberNode *FamilyTree::createTree(Person (&persons)[100],
   FamilyMemberNode *subTreeRoot, *cur;
   for (int i = 0; i < memberCount; ++i) {
     if (parents[i] == root_) {
+      if (persons[personsList[i]].birth <= persons[root_].birth) {
+        cout << "存在孩子的年龄大于父亲, 家谱不合法!" << endl;
+        return nullptr;
+      }
       subTreeRoot = createTree(persons, personsList, parents, personsList[i]);
+      if (!subTreeRoot) return nullptr;
       if (r->firstChild == nullptr) {
         r->firstChild = subTreeRoot;
         cur = subTreeRoot;
@@ -207,6 +212,7 @@ void FamilyTree::getTreeFromFile(const string &filename, Person (&persons)[MAX])
     parents.push_back(stoi(parentList[i]));
   }
   root = createTree(persons, personsIndex, parents, root_index);
+  if (root == nullptr) exit(1);
 }
 
 void FamilyTree::exportToPersonFile(const string &filename)
@@ -334,10 +340,17 @@ void FamilyTree::addChild(string name) {
     children[i].id = id;
     cout << "请输入姓名：" << endl;
     cin >> children[i].name;
-    cout << "出生日期：(eg:0000 00 00)" << endl;
-    int y, m, d;
-    cin >> y >> m >> d;
-    children[i].birth = Date(y, m, d);
+    while (flag) {
+      cout << "出生日期：(eg:0000 00 00)" << endl;
+      int y, m, d;
+      cin >> y >> m >> d;
+      if (!isValidBirth(Date(y, m, d), p->person.birth)) {
+        cout << "年龄大于父亲, 请重新输入!" << endl;
+        continue;
+      }
+      children[i].birth = Date(y, m, d);
+      flag = 0;
+    }
     cout << "是否婚姻：0/1" << endl;
     cin >> children[i].marriage;
     cout << "住址：" << endl;
@@ -345,10 +358,20 @@ void FamilyTree::addChild(string name) {
     cout << "是否在世：0/1" << endl;
     cin >> children[i].alive;
     if (!children[i].alive) {
-      cout << "去世日期：(eg:0000 00 00)" << endl;
-      cin >> y >> m >> d;
-      children[i].death = Date(y, m, d);
+      flag = 1;
+      while (flag) {
+        int y, m, d;
+        cout << "去世日期：(eg:0000 00 00)" << endl;
+        cin >> y >> m >> d;
+        if (!isValidDeath(children[i].birth, Date(y, m, d))) {
+          cout << "去世日期小于出生日期, 请重新输入!" << endl;
+          continue;
+        }
+        children[i].death = Date(y, m, d);
+        flag = 0;
+      }
     }
+    flag = 1;
     if (flag) {
       if (!p->firstChild) {
         p->firstChild = new FamilyMemberNode(children[i]);
@@ -407,13 +430,20 @@ void FamilyTree::update(string name) {
   cout << "请输入姓名:" << endl;
   cin >> presentPerson.name;
   cin.ignore();
-  cout << "请输入生日(年 月 日):" << endl;
-  cin >> presentPerson.birth.year;
-  cin.ignore();
-  cin >> presentPerson.birth.month;
-  cin.ignore();
-  cin >> presentPerson.birth.day;
-  cin.ignore();
+  int flag = 1;
+  while (flag) {
+    cout << "请输入生日(年 月 日):" << endl;
+    int y, m, d;
+    cin >> y >> m >> d;
+    Date birthday = Date(y, m, d);
+    Date parentBirth = Parent(personNode)->person.birth;
+    if (!isValidBirth(birthday, parentBirth)) {
+      cout << "年龄大于其父亲, 请重新输入!" << endl;
+      continue;
+    }
+    personNode->person.birth = birthday;
+    flag = 0;
+  }
   cout << "请输入地址" << endl;
   cin >> presentPerson.address;
   int IsMarried;
@@ -424,10 +454,18 @@ void FamilyTree::update(string name) {
   cin >> presentPerson.alive;
   cin.ignore();
   if (!presentPerson.alive) {
-    cout << "输入去世日期(年 月 日)" << endl;
-    cin >> presentPerson.death.year;
-    cin >> presentPerson.death.month;
-    cin >> presentPerson.death.day;
+    flag = 1;
+    while (flag) {
+      int y, m, d;
+      cout << "输入去世日期(年 月 日)" << endl;
+      cin >> y >> m >> d;
+      Date deathDay = Date(y, m, d);
+      if (deathDay < presentPerson.birth) {
+        cout << "去世日期小于出生日期, 请重新输入!" << endl;
+        continue;
+      }
+      flag = 0;
+    }
   }
 }
 
@@ -623,6 +661,12 @@ int FamilyTree::nodeCount(FamilyMemberNode *r) {
     subTreeNodeCountSum += nodeCount(p);
   return 1 + subTreeNodeCountSum;
 
+}
+bool FamilyTree::isValidBirth(Date presentBirth, Date parentBirth) {
+  return presentBirth > parentBirth;
+}
+bool FamilyTree::isValidDeath(Date presentBirth, Date presentDeath) {
+  return presentDeath >= presentBirth;
 }
 
 vector<string> split(string phrase, string delimiter)

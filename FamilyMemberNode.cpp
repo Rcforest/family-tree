@@ -35,11 +35,11 @@ bool Date::operator<=(const Date& t) const
 }
 bool Date::operator>(const Date& t) const
 {
-	return !operator<=(t);
+	return (year > t.year && month > t.month && day > t.day);
 }
 bool Date::operator<(const Date& t) const
 {
-	return !operator>=(t);
+	return (year < t.year && month < t.month && day < t.day);
 }
 
 bool Date::operator==(const Date& t) const

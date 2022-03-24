@@ -40,6 +40,8 @@ protected:
 	void exportPersonIndex(ofstream& file);
 	void exportParentIndex(ofstream& file);
 	void displayWithConcaveShape(FamilyMemberNode* root_, int level);
+    bool isValidBirth(Date presentBirth, Date parentBirth);
+    bool isValidDeath(Date presentBirth, Date presentDeath);
 	/* editor lhy */
 	void Destroy(FamilyMemberNode*& r);
 	FamilyMemberNode* Parent(FamilyMemberNode* r, const FamilyMemberNode* cur) const;
