@@ -121,11 +121,6 @@ FamilyMemberNode::FamilyMemberNode(const Person &p, FamilyMemberNode *fChild, Fa
     nextSibling = nSibling;
 }
 
-int FamilyMemberNode::id()
-{
-	return person.id;
-}
-
 ostream& operator<<(ostream& out, const Date& date)
 {
 	date.OutputDate(out);
