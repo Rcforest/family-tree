@@ -88,6 +88,7 @@ FamilyMemberNode* FamilyTree::Find(FamilyMemberNode* r, const string& Name) cons
         q = Find(p, Name);
         if (q != NULL) return q;
     }
+    return NULL;
 }
 
 FamilyMemberNode* FamilyTree::createTree(Person (& persons)[100],
@@ -440,12 +441,12 @@ void FamilyTree::remove(const string& name)
 void FamilyTree::update(string name)
 {
     FamilyMemberNode* personNode = Find(name);
-    Person presentPerson = personNode->person;
     if (personNode == NULL)
     {
         cout << "输入信息有误!" << endl;
         return;
     }
+    Person presentPerson = personNode->person;
     cout << "请按下列指引修改信息！" << endl;
     cout << "请输入姓名:" << endl;
     cin >> presentPerson.name;
