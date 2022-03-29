@@ -51,7 +51,7 @@ struct Person
         string Address = "NoAddress",
         bool Alive = false,
         const Date& Death = Date(),
-        bool R = true,
+        bool R = false,
         int ID = -1);
 
     Person& operator=(const Person& temp);

@@ -42,6 +42,7 @@ int Choice(const char *prompt, const char *options)        // 函数定义。输
 
 int main()
 {
+    system("chcp 65001");
     int n;
     string name1, name2;
     FamilyTree tree;

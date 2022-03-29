@@ -188,7 +188,7 @@ void FamilyTree::getTreeFromFile(const string& filename, Person (& persons)[MAX]
     std::getline(infile, line);
     vector<string> parentList = split(line, ", ");
     vector<int> personsIndex;
-    int root_index;
+    int root_index = 0;
     int count = memberCount + size(repeatedIndex);
     for (int i = 0; i < count; ++i)
     {
@@ -329,7 +329,7 @@ void FamilyTree::addChild(const string& name)
     int num = 0, i = 0;
     cout << "添加孩子个数：";
     cin >> num;
-    Person children[num];
+    Person children[10];
     int flag = 1;
 
     while (num--)

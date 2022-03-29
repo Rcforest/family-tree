@@ -63,6 +63,7 @@ Person::Person() :birth(Date()), death(Date())
 	marriage = false;
 	address = "NoAddress";
 	alive = false;
+	recorded = false;
 }
 
 Person::Person(const Person& temp)
